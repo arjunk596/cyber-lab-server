@@ -11,10 +11,10 @@ Run the containerized laboratory:
 docker compose up -d
 ```
 
-The server binds to `http://localhost:5000`.
+The server binds to `http://localhost:5050`.
 
 ## Step 2 — Baseline Normal Traffic
-1. Open `http://localhost:5000` in your browser.
+1. Open `http://localhost:5050` in your browser.
 2. Under Scenario Selection, select **Normal Traffic Simulation**.
 3. Click **Start Simulation** and observe stable server CPU utilization (<15%), 0% packet loss, and full availability.
 
