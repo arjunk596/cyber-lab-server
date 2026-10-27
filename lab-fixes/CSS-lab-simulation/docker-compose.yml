@@ -1,0 +1,8 @@
+services:
+  rsa-lab:
+    build: .
+    image: rsa-virtual-lab
+    container_name: rsa-virtual-lab
+    restart: unless-stopped
+    ports:
+      - "8080:80"

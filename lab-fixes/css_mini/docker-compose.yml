@@ -1,0 +1,8 @@
+services:
+  syn-flood-lab:
+    build: .
+    image: syn-flood-virtual-lab
+    container_name: syn-flood-virtual-lab
+    restart: unless-stopped
+    ports:
+      - "8081:80"

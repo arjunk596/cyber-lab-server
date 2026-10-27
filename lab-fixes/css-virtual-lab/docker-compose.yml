@@ -1,0 +1,11 @@
+services:
+  dos-ddos-lab:
+    build: .
+    image: css-virtual-lab-dos
+    container_name: css-virtual-lab-dos
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - PYTHONUNBUFFERED=1
