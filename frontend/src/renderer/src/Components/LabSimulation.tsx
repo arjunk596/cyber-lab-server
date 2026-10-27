@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type JSX } from 'react'
-import { ArrowLeft, Container, Loader2, Play, Square } from 'lucide-react'
+import { ArrowLeft, Container, ExternalLink, Loader2, Play, Square, Terminal as TerminalIcon } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import type { LabLog, LabStatus } from '@shared/lab'
@@ -9,23 +9,27 @@ import '../Sass/Components/LabSimulation.scss'
 
 interface Proptype {
   experiment: Experiment | null
+  onBackToTheory?: () => void
 }
 
 const PHASE_LABEL: Record<LabStatus['phase'], string> = {
-  idle: 'not running',
-  cloning: 'cloning repository…',
-  starting: 'starting containers…',
-  running: 'running',
-  stopping: 'cleaning up…'
+  idle: 'Container Offline',
+  cloning: 'Cloning Repository…',
+  starting: 'Building & Starting…',
+  running: 'Container Active',
+  stopping: 'Tearing Down…'
 }
 
-const MAX_LOG_LINES = 400
+const MAX_LOG_LINES = 500
 
-const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
+const LabSimulation = ({ experiment, onBackToTheory }: Proptype): JSX.Element => {
   const navigate = useNavigate()
   const [status, setStatus] = useState<LabStatus>({ phase: 'idle' })
   const [logs, setLogs] = useState<LabLog[]>([])
   const logRef = useRef<HTMLDivElement | null>(null)
+
+  const activePort = status.webPort || experiment?.port
+  const webUrl = status.webUrl || (activePort ? `http://localhost:${activePort}` : undefined)
 
   useEffect(() => {
     let alive = true
@@ -72,8 +76,8 @@ const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
     ])
 
     if (!git) toast.error('Git is not installed')
-    if (!docker) toast.error('docker is not installed')
-    if (!compose) toast.error('Docker compose is not installed')
+    if (!docker) toast.error('Docker is not installed')
+    if (!compose) toast.error('Docker Compose is not installed')
     if (!dockerDaemon) toast.error('Docker daemon is not running')
 
     if (!(git && docker && compose && dockerDaemon)) return
@@ -81,7 +85,8 @@ const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
     setLogs([])
     const result = await window.api.lab.start({
       url: experiment.github_url,
-      repoName: experiment.github_repo_name
+      repoName: experiment.github_repo_name,
+      port: experiment.port
     })
     if (result.error) toast.error(result.error)
   }, [experiment])
@@ -91,19 +96,39 @@ const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
     if (result.error) toast.error(result.error)
   }, [])
 
+  const handleOpenBrowser = useCallback(() => {
+    if (webUrl) {
+      window.api.openURL(webUrl)
+    } else {
+      toast.info('No web port configured for this lab container.')
+    }
+  }, [webUrl])
+
   const isIdle = status.phase === 'idle'
   const isBusy = status.phase === 'cloning' || status.phase === 'starting'
   const canEnd = status.phase === 'running' || status.phase === 'starting'
+  const isRunning = status.phase === 'running'
 
   return (
     <section className="lab-sim">
       <div className="heading">
-        <button className="back-btn" type="button" onClick={() => navigate('/home')}>
-          <ArrowLeft size={30} />
+        <button
+          className="back-btn"
+          type="button"
+          onClick={() => (onBackToTheory ? onBackToTheory() : navigate('/home'))}
+          title="Return"
+        >
+          <ArrowLeft size={20} />
         </button>
 
         <div className="heading-title">
-          <h2>{experiment?.title} - Simulation</h2>
+          <div>
+            <h2>{experiment?.title}</h2>
+            <div className="sim-meta-sub">
+              <span>Runtime Engine: Docker Compose</span>
+              {activePort && <span className="port-badge">Port {activePort}</span>}
+            </div>
+          </div>
 
           <div className="sim-actions">
             <span className={`sim-phase ${status.phase}`}>
@@ -111,28 +136,39 @@ const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
               {PHASE_LABEL[status.phase]}
             </span>
 
-            {
-              isIdle ?
-                <button
-                  className="sim-btn start-btn"
-                  type="button"
-                  onClick={startLab}
-                  disabled={!experiment}
-                >
-                  <Play size={14} />
-                  Start
-                </button>
-                :
-                <button
-                  className="sim-btn end-btn"
-                  type="button"
-                  onClick={endLab}
-                  disabled={!canEnd}
-                >
-                  <Square size={13} />
-                  {status.phase === 'stopping' ? 'Ending…' : 'End'}
-                </button>
-            }
+            {isRunning && webUrl && (
+              <button
+                className="sim-btn browser-btn"
+                type="button"
+                onClick={handleOpenBrowser}
+                title={`Open standalone web simulation at ${webUrl}`}
+              >
+                <ExternalLink size={13} />
+                Open in Web Browser
+              </button>
+            )}
+
+            {isIdle ? (
+              <button
+                className="sim-btn start-btn"
+                type="button"
+                onClick={startLab}
+                disabled={!experiment}
+              >
+                <Play size={13} />
+                Launch Container
+              </button>
+            ) : (
+              <button
+                className="sim-btn end-btn"
+                type="button"
+                onClick={endLab}
+                disabled={!canEnd}
+              >
+                <Square size={12} />
+                {status.phase === 'stopping' ? 'Terminating…' : 'Stop Lab'}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -142,35 +178,54 @@ const LabSimulation = ({ experiment }: Proptype): JSX.Element => {
           <div className="pane-head">
             <span className="pane-title">
               <Container size={14} />
-              Docker · lab output
+              Container Execution Logs
             </span>
             <span className="pane-meta" title={status.repoPath}>
-              {status.repoName ?? 'no repository'}
+              {status.repoName ?? 'unattached'}
             </span>
           </div>
 
           <div className="pane-log" ref={logRef}>
-            {
-              logs.length === 0 ?
-                <p className="log-empty">
-                  {isIdle ? 'Start the lab to stream the docker output here.' : 'Waiting for output…'}
+            {logs.length === 0 ? (
+              <div className="log-empty">
+                <p>
+                  {isIdle
+                    ? 'Lab container is currently stopped. Click "Launch Container" to spin up the local environment and stream logs here.'
+                    : 'Awaiting container output stream…'}
                 </p>
-                :
-                logs.map((entry, index) => (
-                  <div key={index} className={`log-line ${entry.stream}`}>{entry.line}</div>
-                ))
-            }
+                {activePort && (
+                  <p className="log-hint">
+                    Target container binding: <code>localhost:{activePort}</code>
+                  </p>
+                )}
+              </div>
+            ) : (
+              logs.map((entry, index) => (
+                <div key={index} className={`log-line ${entry.stream}`}>
+                  {entry.line}
+                </div>
+              ))
+            )}
           </div>
         </section>
 
         <section className="sim-pane">
-          <Terminal
-            cwd={
-              status.phase === 'starting' || status.phase === 'running'
-                ? status.repoPath
-                : undefined
-            }
-          />
+          <div className="pane-head">
+            <span className="pane-title">
+              <TerminalIcon size={14} />
+              Interactive Shell Session
+            </span>
+            <span className="pane-meta">xterm.js</span>
+          </div>
+          <div className="terminal-wrap">
+            <Terminal
+              cwd={
+                status.phase === 'starting' || status.phase === 'running'
+                  ? status.repoPath
+                  : undefined
+              }
+            />
+          </div>
         </section>
       </div>
     </section>

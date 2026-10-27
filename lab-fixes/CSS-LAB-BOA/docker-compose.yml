@@ -1,0 +1,7 @@
+services:
+  buffer-overflow-lab:
+    build: .
+    container_name: cyberlab_buffer_overflow
+    ports:
+      - "3001:3001"
+    restart: unless-stopped

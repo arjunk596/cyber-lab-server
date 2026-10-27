@@ -4,6 +4,8 @@ export interface LabStatus {
   phase: LabPhase
   repoName?: string
   repoPath?: string
+  webPort?: number
+  webUrl?: string
   error?: string
 }
 
@@ -17,6 +19,7 @@ export interface LabLog {
 export interface LabStartOptions {
   url: string
   repoName?: string
+  port?: number
 }
 
 export interface LabSnapshot {

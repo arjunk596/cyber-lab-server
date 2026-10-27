@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { Bug, EllipsisVertical, Info, Minus, Plus, RefreshCw, X } from 'lucide-react'
+import { Bug, EllipsisVertical, Info, Minus, Moon, Plus, RefreshCw, Sun, X } from 'lucide-react'
 import Logo from '../Assets/Logo.png'
+import { useTheme } from '../Utils/theme'
 import '../Sass/Layouts/Header.scss'
 
 interface Proptype {
   menuVisiblity: boolean
 }
-const ISSUES_URL = 'https://github.com/ybhavesh-0915/cyber-lab/issues'
+
+const ISSUES_URL = 'https://github.com/crce-cyberlab/cyber-lab/issues'
 
 const Header = ({ menuVisiblity }: Proptype) => {
   const { minimize, maximize, close } = window.api.winCtrl
+  const { theme, toggleTheme } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -36,13 +39,25 @@ const Header = ({ menuVisiblity }: Proptype) => {
     <>
       <header>
         <div className="branding">
-          <div className="logo"><img src={Logo} alt="logo" /></div>
-          <span className='title'>CRCE Cyber Lab</span>
+          <div className="logo"><img src={Logo} alt="CRCE Cyber Lab Logo" /></div>
+          <span className="title">CRCE Cyber Lab</span>
+          <span className="platform-tag">Virtual Labs</span>
         </div>
 
         <div className="right">
-          {
-            menuVisiblity && <div className="menu-wrap" ref={menuRef}>
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
+          </button>
+
+          {menuVisiblity && (
+            <div className="menu-wrap" ref={menuRef}>
               <button
                 type="button"
                 className="menu-btn"
@@ -68,7 +83,7 @@ const Header = ({ menuVisiblity }: Proptype) => {
                       }}
                     >
                       <RefreshCw size={13} />
-                      Refresh
+                      Refresh View
                     </button>
                   </li>
                   <li role="none">
@@ -82,7 +97,7 @@ const Header = ({ menuVisiblity }: Proptype) => {
                       }}
                     >
                       <Info size={13} />
-                      About
+                      About Platform
                     </button>
                   </li>
                   <li role="none" className="menu-divider" />
@@ -103,44 +118,43 @@ const Header = ({ menuVisiblity }: Proptype) => {
                 </ul>
               )}
             </div>
-          }
+          )}
 
           <div className="window-ctrl">
             <button
               type="button"
               className="win-ctrl-btn minimize"
-              title='Minimize'
+              title="Minimize"
               aria-label="Minimize"
               onClick={() => minimize()}
             >
-              <Minus size={12} />
+              <Minus size={11} />
             </button>
 
             <button
               type="button"
               className="win-ctrl-btn maximize"
-              title='Maximize'
+              title="Maximize"
               aria-label="Maximize"
               onClick={() => maximize()}
             >
-              <Plus size={12} />
+              <Plus size={11} />
             </button>
 
             <button
               type="button"
               className="win-ctrl-btn close"
-              title='Close'
+              title="Close"
               aria-label="Close"
               onClick={() => close()}
             >
-              <X size={12} />
+              <X size={11} />
             </button>
           </div>
         </div>
-
       </header>
 
-      {(aboutOpen && menuVisiblity) && (
+      {aboutOpen && menuVisiblity && (
         <div className="about-overlay" onClick={() => setAboutOpen(false)}>
           <div
             className="about-dialog"
@@ -160,17 +174,15 @@ const Header = ({ menuVisiblity }: Proptype) => {
             <img className="about-logo" src={Logo} alt="CRCE Cyber Lab" />
             <h2>CRCE Cyber Lab</h2>
             <p>
-              A hands-on learning platform to explore cybersecurity, practice
-              ethical hacking and build real-world skills through interactive
-              labs and experiments.
+              A hands-on cybersecurity education and experiment platform engineered for
+              hands-on network analysis, cryptographic simulation, and vulnerability defense.
             </p>
-            <span className="about-meta">v1.0.0 · Electron · React</span>
+            <span className="about-meta">v1.2.0 • Electron • React 19 • Python</span>
           </div>
         </div>
       )}
     </>
   )
 }
-
 
 export default Header

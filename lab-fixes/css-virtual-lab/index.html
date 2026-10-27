@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Security Lab: DoS & DDoS Attacks and Mitigation</title>
+  <style>
+    :root { --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0; --text: #0f172a; --muted: #64748b; --primary: #2563eb; --danger: #dc2626; --success: #16a34a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 24px; min-height: 100vh; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .badge { font-size: 11px; font-weight: 700; text-transform: uppercase; background: #eff6ff; color: var(--primary); padding: 4px 8px; border-radius: 4px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .metric { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+    .metric-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .metric-val { font-size: 20px; font-weight: 700; font-family: monospace; }
+    .btn { padding: 8px 16px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 0; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid var(--border); }
+    .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .log-box { background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 12px; padding: 12px; border-radius: 8px; height: 160px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <span class="badge">CRCE Cyber Lab</span>
+        <h1 style="font-size:20px; margin-top:4px;">Virtual Network Security: DoS & DDoS Simulation</h1>
+      </div>
+      <div>
+        <span id="server-status" style="color:var(--success); font-weight:600;">● Server Healthy</span>
+      </div>
+    </header>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">CPU Load</div><div class="metric-val" id="cpu-val">8%</div></div>
+      <div class="metric"><div class="metric-label">Queue Saturation</div><div class="metric-val" id="queue-val">0 / 256</div></div>
+      <div class="metric"><div class="metric-label">Packet Loss</div><div class="metric-val" id="loss-val">0%</div></div>
+      <div class="metric"><div class="metric-label">Availability</div><div class="metric-val" id="avail-val">100%</div></div>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:16px; margin-bottom:12px;">Simulation Controls & Attack Profiles</h2>
+      <div class="controls">
+        <button class="btn btn-primary" id="btn-normal">Normal Traffic</button>
+        <button class="btn btn-danger" id="btn-dos">Launch Single-Source DoS</button>
+        <button class="btn btn-danger" id="btn-ddos">Launch Distributed DDoS</button>
+        <button class="btn btn-secondary" id="btn-mitigate">Toggle Rate-Limiter: <strong id="filter-state">OFF</strong></button>
+        <button class="btn btn-secondary" id="btn-reset">Reset</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:16px; margin-bottom:8px;">Live Packet & Queue Log</h2>
+      <div class="log-box" id="log-box">
+        [00:00:00] Initialized baseline monitor. Target server listening on port 5050.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let filterOn = false;
+    let mode = 'normal';
+    let timer = null;
+    let sec = 0;
+
+    function addLog(msg) {
+      const box = document.getElementById('log-box');
+      const time = new Date().toTimeString().split(' ')[0];
+      box.innerHTML += `<div>[${time}] ${msg}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function update() {
+      sec++;
+      const cpu = document.getElementById('cpu-val');
+      const queue = document.getElementById('queue-val');
+      const loss = document.getElementById('loss-val');
+      const avail = document.getElementById('avail-val');
+      const status = document.getElementById('server-status');
+
+      if (mode === 'normal') {
+        cpu.textContent = `${Math.floor(5 + Math.random() * 8)}%`;
+        queue.textContent = `${Math.floor(2 + Math.random() * 5)} / 256`;
+        loss.textContent = '0%';
+        avail.textContent = '100%';
+        status.textContent = '● Server Healthy';
+        status.style.color = 'var(--success)';
+      } else if (mode === 'dos') {
+        if (filterOn) {
+          cpu.textContent = '22%';
+          queue.textContent = '18 / 256';
+          loss.textContent = '2%';
+          avail.textContent = '98%';
+          status.textContent = '● DoS Mitigated by Rate-Limiting';
+          status.style.color = 'var(--success)';
+        } else {
+          cpu.textContent = '94%';
+          queue.textContent = '256 / 256 (FULL)';
+          loss.textContent = '68%';
+          avail.textContent = '32%';
+          status.textContent = '● Server Degraded (Queue Saturated)';
+          status.style.color = 'var(--danger)';
+        }
+      } else if (mode === 'ddos') {
+        if (filterOn) {
+          cpu.textContent = '38%';
+          queue.textContent = '45 / 256';
+          loss.textContent = '5%';
+          avail.textContent = '95%';
+          status.textContent = '● DDoS Filter Active (Traffic Throttled)';
+          status.style.color = 'var(--success)';
+        } else {
+          cpu.textContent = '100%';
+          queue.textContent = '256 / 256 (OVERFLOW)';
+          loss.textContent = '94%';
+          avail.textContent = '6%';
+          status.textContent = '● Server Outage (DDoS Saturation)';
+          status.style.color = 'var(--danger)';
+        }
+      }
+    }
+
+    timer = setInterval(update, 1000);
+
+    document.getElementById('btn-normal').onclick = () => {
+      mode = 'normal';
+      addLog('Switching to Baseline Normal Traffic.');
+    };
+    document.getElementById('btn-dos').onclick = () => {
+      mode = 'dos';
+      addLog('WARNING: Launching Single-Source SYN flood (intensity: 5000 pkts/sec).');
+    };
+    document.getElementById('btn-ddos').onclick = () => {
+      mode = 'ddos';
+      addLog('CRITICAL: Launching Distributed Botnet Attack (24 spoofed nodes).');
+    };
+    document.getElementById('btn-mitigate').onclick = () => {
+      filterOn = !filterOn;
+      document.getElementById('filter-state').textContent = filterOn ? 'ON' : 'OFF';
+      addLog(filterOn ? 'Defenses: Rate-limiting & Token Bucket active.' : 'Defenses: Filter bypassed.');
+    };
+    document.getElementById('btn-reset').onclick = () => {
+      mode = 'normal';
+      filterOn = false;
+      document.getElementById('filter-state').textContent = 'OFF';
+      addLog('System state reset.');
+    };
+  </script>
+</body>
+</html>

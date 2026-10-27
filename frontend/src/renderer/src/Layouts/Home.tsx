@@ -1,58 +1,71 @@
 import { useEffect, useMemo, useState, Dispatch, SetStateAction } from 'react'
 import { useNavigate } from 'react-router'
-import { ChevronDown, Search, SearchX } from 'lucide-react'
+import { ChevronDown, RefreshCw, Search, SearchX, X, WifiOff } from 'lucide-react'
 import { CATEGORIES, DIFFICULTIES, type Experiment } from '@shared/experiment'
 import ExperimentCard from '@renderer/Components/ExperimentCard'
 import CardSkeleton from '@renderer/Components/CardSkeleton'
+import { DEFAULT_EXPERIMENTS } from '@renderer/Constant/defaultLabs'
 import '../Sass/Layouts/Home.scss'
 
 interface Proptype {
   setMenuVisiblity: Dispatch<SetStateAction<boolean>>
 }
 
-const SKELETON_COUNT = 10
-const API_URL = (import.meta.env.RENDERER_VITE_API_URL as string)
+const SKELETON_COUNT = 6
+const API_URL = (import.meta.env.RENDERER_VITE_API_URL as string) || 'http://localhost:8000/'
 
 const Home = ({ setMenuVisiblity }: Proptype) => {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>('All')
   const [difficulty, setDifficulty] = useState<(typeof DIFFICULTIES)[number]>('All Difficulties')
-  const [experiments, setExperiments] = useState<Experiment[]>([])
+  const [experiments, setExperiments] = useState<Experiment[]>(DEFAULT_EXPERIMENTS)
   const [loading, setLoading] = useState(true)
+  const [isOfflineFallback, setIsOfflineFallback] = useState(false)
+
+  const loadExperiments = async (cancelled = false) => {
+    setLoading(true)
+    try {
+      const res = await fetch(API_URL, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const json = await res.json()
+      const list: Experiment[] = Array.isArray(json)
+        ? json
+        : Array.isArray(json?.data)
+          ? json.data
+          : []
+      if (!cancelled) {
+        setExperiments(list.length > 0 ? list : DEFAULT_EXPERIMENTS)
+        setIsOfflineFallback(false)
+      }
+    } catch {
+      if (!cancelled) {
+        setExperiments(DEFAULT_EXPERIMENTS)
+        setIsOfflineFallback(true)
+      }
+    } finally {
+      if (!cancelled) setLoading(false)
+    }
+  }
 
   useEffect(() => {
     setMenuVisiblity(true)
     let cancelled = false
-
-    const load = async (): Promise<void> => {
-      try {
-        const res = await fetch(API_URL, {
-          headers: { 'ngrok-skip-browser-warning': 'true' }
-        })
-        const json = await res.json()
-        const list: Experiment[] = (
-          Array.isArray(json) ?
-            json
-            :
-            Array.isArray(json?.data) ?
-              json.data
-              :
-              []
-        )
-        if (!cancelled) setExperiments(list)
-      } catch {
-        if (!cancelled) setExperiments([])
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-
-    load()
+    loadExperiments(cancelled)
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [setMenuVisiblity])
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = { All: experiments.length }
+    for (const exp of experiments) {
+      counts[exp.category] = (counts[exp.category] || 0) + 1
+    }
+    return counts
+  }, [experiments])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -60,7 +73,8 @@ const Home = ({ setMenuVisiblity }: Proptype) => {
       const matchQuery =
         !q ||
         exp.title.toLowerCase().includes(q) ||
-        exp.description.toLowerCase().includes(q)
+        exp.description.toLowerCase().includes(q) ||
+        (exp.github_repo_name && exp.github_repo_name.toLowerCase().includes(q))
       const matchCategory = category === 'All' || exp.category === category
       const matchDifficulty = difficulty === 'All Difficulties' || exp.difficulty === difficulty
       return matchQuery && matchCategory && matchDifficulty
@@ -72,24 +86,69 @@ const Home = ({ setMenuVisiblity }: Proptype) => {
     navigate('/lab')
   }
 
+  const handleClearSearch = () => {
+    setQuery('')
+  }
+
+  const handleResetFilters = () => {
+    setQuery('')
+    setCategory('All')
+    setDifficulty('All Difficulties')
+  }
+
   return (
     <div className="home">
       <section className="home-hero">
-        <h1 className="home-title">Cybersecurity Experiments</h1>
-        <p className="home-subtitle">Select an experiment to begin your hands-on lab.</p>
+        <div className="home-hero-content">
+          <div>
+            <h1 className="home-title">Cybersecurity Experiments</h1>
+            <p className="home-subtitle">Select an experiment to begin your hands-on virtual lab session.</p>
+          </div>
+          <div className="home-stats-pill">
+            <span className="stats-dot" />
+            <span>Showing {filtered.length} of {experiments.length} labs</span>
+          </div>
+        </div>
+
+        {isOfflineFallback && (
+          <div className="offline-banner">
+            <div className="offline-msg">
+              <WifiOff size={14} />
+              <span>Catalog API is starting up — running in offline cached mode.</span>
+            </div>
+            <button
+              type="button"
+              className="offline-retry-btn"
+              onClick={() => loadExperiments(false)}
+            >
+              <RefreshCw size={12} />
+              Retry Connection
+            </button>
+          </div>
+        )}
       </section>
 
       <section className="home-toolbar">
         <div className="home-toolbar-row">
-          <label className="home-search">
-            <Search size={16} className="home-search-icon" />
+          <div className="home-search">
+            <Search size={15} className="home-search-icon" />
             <input
               type="text"
-              placeholder="Search experiments..."
+              placeholder="Search experiments by title, category, or keyword..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-          </label>
+            {query && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
 
           <label className="home-select">
             <select
@@ -102,21 +161,25 @@ const Home = ({ setMenuVisiblity }: Proptype) => {
                 </option>
               ))}
             </select>
-            <ChevronDown size={15} className="home-select-icon" />
+            <ChevronDown size={14} className="home-select-icon" />
           </label>
         </div>
 
         <div className="home-tabs">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              type="button"
-              className={`home-tab ${category === c ? 'active' : ''}`}
-              onClick={() => setCategory(c)}
-            >
-              {c}
-            </button>
-          ))}
+          {CATEGORIES.map((c) => {
+            const count = categoryCounts[c] ?? 0
+            return (
+              <button
+                key={c}
+                type="button"
+                className={`home-tab ${category === c ? 'active' : ''}`}
+                onClick={() => setCategory(c)}
+              >
+                <span>{c}</span>
+                <span className="tab-count">{count}</span>
+              </button>
+            )
+          })}
         </div>
       </section>
 
@@ -128,15 +191,18 @@ const Home = ({ setMenuVisiblity }: Proptype) => {
         </section>
       ) : filtered.length > 0 ? (
         <section className="home-grid">
-          {filtered.map((exp) => {
-            return <ExperimentCard key={exp.id} experiment={exp} onStart={handleStart} />
-          })}
+          {filtered.map((exp) => (
+            <ExperimentCard key={exp.id} experiment={exp} onStart={handleStart} />
+          ))}
         </section>
       ) : (
         <section className="home-empty">
-          <SearchX size={28} />
-          <h3>No experiments found</h3>
-          <p>Try a different search term or filter.</p>
+          <SearchX size={32} />
+          <h3>No matching experiments found</h3>
+          <p>No experiments matched your current filter criteria.</p>
+          <button type="button" className="reset-filters-btn" onClick={handleResetFilters}>
+            Reset Filters
+          </button>
         </section>
       )}
     </div>

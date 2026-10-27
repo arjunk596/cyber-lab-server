@@ -1,6 +1,6 @@
 import { app, ipcMain, type BrowserWindow } from "electron";
 import { spawn, type ChildProcess } from "node:child_process";
-import { access, readFile, rm, writeFile } from "node:fs/promises";
+import { access, cp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import type { LabLog, LabLogStream, LabSnapshot, LabStartOptions, LabStatus } from "../../shared/lab";
 import {
@@ -24,6 +24,7 @@ interface ActiveSession {
   repoPath: string
   compose: ComposeRef
   proc: ChildProcess | null
+  webPort?: number
 }
 
 interface SavedSession {
@@ -56,6 +57,35 @@ let stopPromise: Promise<LabStatus> | null = null
 let generation = 0
 let windowRef: (() => BrowserWindow | null) | null = null
 
+const findLocalLabFixDir = async (repoName: string): Promise<string | null> => {
+  const candidates = [
+    join(process.cwd(), '../lab-fixes', repoName),
+    join(process.cwd(), 'lab-fixes', repoName),
+    join(__dirname, '../../../../lab-fixes', repoName),
+    join(__dirname, '../../../lab-fixes', repoName),
+    join(app.getAppPath(), '../lab-fixes', repoName)
+  ]
+  for (const c of candidates) {
+    try {
+      const s = await stat(c)
+      if (s.isDirectory()) return c
+    } catch {}
+  }
+  return null
+}
+
+const portForLab = (repoName: string, passedPort?: number): number => {
+  if (passedPort) return passedPort
+  const map: Record<string, number> = {
+    'trojan-horse-mcp': 7331,
+    'CSS-lab-simulation': 8080,
+    'css-virtual-lab': 5050,
+    'CSS-LAB-BOA': 3001,
+    'css_mini': 8081,
+    'packet_spoofing': 3002
+  }
+  return map[repoName] || 8080
+}
 
 const send = (channel: string, payload: unknown): void => {
   try {
@@ -241,6 +271,8 @@ const doStartLab = async (opts: LabStartOptions): Promise<LabStatus> => {
   }
 
   const repoName = sanitizeRepoName((opts.repoName ?? "").trim() || repoNameFromUrl(url))
+  const webPort = portForLab(repoName, opts.port)
+  const webUrl = `http://localhost:${webPort}`
   let repoPath = ""
   setLabShellEnv({ COMPOSE_PROJECT_NAME: projectNameFor(repoName) })
 
@@ -249,29 +281,48 @@ const doStartLab = async (opts: LabStartOptions): Promise<LabStatus> => {
     await ensureRepoRoot()
     repoPath = await repoPathFor(repoName)
 
-    setStatus({ phase: "cloning", repoName, repoPath })
+    setStatus({ phase: "cloning", repoName, repoPath, webPort, webUrl })
     pushLog("sys", `$ git clone ${url} ${repoPath}`)
 
     await removeRepoDir(repoPath)
     if (gen !== generation) throw new Error("cancelled")
 
+    const localFixDir = await findLocalLabFixDir(repoName)
+
+    let cloneSucceeded = false
     const cloneCode = await run(
       "git",
       ["clone", "--depth", "1", url, repoPath],
       {
         cwd: repoRoot(),
         errorStream: "out",
-        timeoutMs: 5 * 60 * 1000,
+        timeoutMs: 45 * 1000,
         onSpawn: (child) => { activeClone = child }
       }
     )
     activeClone = null
     if (gen !== generation) throw new Error("cancelled")
-    if (cloneCode !== 0) {
-      throw new Error("git clone failed. Check the repository URL / network connection.")
+    
+    if (cloneCode === 0) {
+      cloneSucceeded = true
+      // If local fixes exist, copy them over the cloned repo to patch missing compose or files
+      if (localFixDir) {
+        try {
+          await cp(localFixDir, repoPath, { recursive: true, force: true })
+          pushLog("sys", `Merged local lab patches from ${localFixDir}`)
+        } catch { }
+      }
+    } else if (localFixDir) {
+      pushLog("sys", `Git clone failed or offline. Using local lab workspace from ${localFixDir}...`)
+      await cp(localFixDir, repoPath, { recursive: true, force: true })
+      cloneSucceeded = true
     }
 
-    setStatus({ phase: "starting", repoName, repoPath })
+    if (!cloneSucceeded) {
+      throw new Error("Could not clone repository and no local lab directory was found.")
+    }
+
+    setStatus({ phase: "starting", repoName, repoPath, webPort, webUrl })
 
     const compose = await resolveCompose(repoPath, repoName)
     if (!compose) {
@@ -315,7 +366,7 @@ const doStartLab = async (opts: LabStartOptions): Promise<LabStatus> => {
     })
 
     pushLog("sys", `Lab is up. Shell is working inside ${repoPath}`)
-    return setStatus({ phase: "running", repoName, repoPath })
+    return setStatus({ phase: "running", repoName, repoPath, webPort, webUrl })
   } catch (error) {
     if (gen !== generation) {
       if (session) {

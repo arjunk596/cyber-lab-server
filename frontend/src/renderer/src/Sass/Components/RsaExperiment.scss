@@ -1,0 +1,292 @@
+.rsa-lab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+
+  .rsa-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card, 14px);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    .card-top-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+
+      .header-icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: var(--color-primary-fixed-dim);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        &.orange-box {
+          background: var(--color-orange-dim);
+          border-color: var(--color-orange-border);
+          color: var(--color-orange);
+        }
+      }
+
+      h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-on-surface);
+        margin: 0;
+        letter-spacing: -0.2px;
+      }
+
+      .card-subtitle {
+        font-size: 12px;
+        color: var(--color-muted);
+        display: block;
+        margin-top: 2px;
+      }
+    }
+
+    /* Key Generation Inputs & Display */
+    .keys-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+
+      .key-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+          font-size: 12.5px;
+          font-weight: 600;
+          color: var(--color-on-surface);
+        }
+
+        input {
+          padding: 9px 12px;
+          background: var(--color-surface-2);
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          font-family: var(--font-mono);
+          font-size: 13px;
+          color: var(--color-on-surface);
+          outline: none;
+          transition: all 0.15s ease;
+
+          &:focus {
+            border-color: var(--color-primary);
+            background: var(--color-surface);
+            box-shadow: 0 0 0 3px var(--color-primary-fixed-dim);
+          }
+        }
+      }
+
+      .key-display-pill {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .pill-label {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--color-muted);
+          text-transform: uppercase;
+        }
+
+        .pill-val {
+          font-family: var(--font-mono);
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--color-on-surface);
+
+          &.highlight-val {
+            color: var(--color-orange);
+          }
+
+          &.primary-val {
+            color: var(--color-primary);
+          }
+        }
+      }
+    }
+
+    .rsa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &.btn-primary {
+        background: var(--color-orange-gradient);
+        border: 1px solid var(--color-orange);
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+
+        &:hover {
+          background: var(--color-orange-hover);
+          box-shadow: 0 4px 12px rgba(255, 107, 0, 0.45);
+          transform: translateY(-1px);
+        }
+      }
+
+      &.btn-secondary {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        color: var(--color-muted);
+
+        &:hover {
+          background: var(--color-surface-3);
+          color: var(--color-on-surface);
+          border-color: var(--color-border-strong);
+        }
+      }
+    }
+
+    /* Mathematical Steps Pipeline */
+    .calc-steps-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .calc-step {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+
+        .step-tag {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--color-primary);
+          background: var(--color-primary-fixed-dim);
+          padding: 2px 8px;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+
+        .step-math {
+          color: var(--color-on-surface);
+          flex: 1;
+        }
+      }
+    }
+
+    /* Chosen Ciphertext Attack Pipeline */
+    .cca-pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .cca-step-item {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .cca-step-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--color-orange);
+        }
+
+        .cca-step-math {
+          font-family: var(--font-mono);
+          font-size: 12px;
+          color: var(--color-on-surface);
+        }
+      }
+    }
+
+    /* Factoring Challenge */
+    .factor-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+
+      .factor-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--color-on-surface);
+        }
+
+        input {
+          padding: 9px 12px;
+          background: var(--color-surface-2);
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          font-family: var(--font-mono);
+          font-size: 13px;
+          color: var(--color-on-surface);
+          width: 140px;
+          outline: none;
+
+          &:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-fixed-dim);
+          }
+        }
+      }
+    }
+
+    .factor-status-box {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+
+      &.status-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        color: #10b981;
+      }
+
+      &.status-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #ef4444;
+      }
+    }
+  }
+}

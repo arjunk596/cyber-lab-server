@@ -7,6 +7,20 @@ import { checkDeps, type CmdType } from "./Process/checkDependency";
 import { killPtySession, registerTerminalHandlers } from "./Process/Terminal";
 import { recoverLabOnBoot, registerLabHandlers, stopLab } from "./Process/Lab";
 
+// Augment PATH with Docker, Homebrew, and system paths on macOS/Linux
+const homeDir = process.env.HOME || ''
+const extraPaths = [
+  join(homeDir, '.docker', 'bin'),
+  '/opt/homebrew/bin',
+  '/opt/homebrew/sbin',
+  '/usr/local/bin',
+  '/usr/bin',
+  '/bin',
+  '/usr/sbin',
+  '/sbin'
+]
+process.env.PATH = `${extraPaths.join(':')}:${process.env.PATH || ''}`
+
 let win: null | BrowserWindow = null;
 const lock = app.requestSingleInstanceLock();
 

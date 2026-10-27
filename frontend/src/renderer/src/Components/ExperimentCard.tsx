@@ -25,29 +25,27 @@ const CATEGORY_ICONS = {
   'Malware Analysis': Bug
 } as const
 
-const CATEGORY_ACCENTS = {
-  'Web Security': 'violet',
-  System: 'rose',
-  Network: 'sky',
-  Cryptography: 'fuchsia',
-  'Authentication Security': 'indigo',
-  'Malware Analysis': 'amber'
-} as const
+const DIFFICULTY_CLASSES: Record<string, string> = {
+  Beginner: 'diff-beginner',
+  Intermediate: 'diff-intermediate',
+  Advanced: 'diff-advanced'
+}
 
 const ExperimentCard = ({ experiment, onStart }: ExperimentCardProps) => {
   const Icon = CATEGORY_ICONS[experiment.category] ?? ShieldAlert
-  const accent = CATEGORY_ACCENTS[experiment.category] ?? 'sky'
+  const diffClass = DIFFICULTY_CLASSES[experiment.difficulty] ?? 'diff-intermediate'
 
   return (
     <article className="exp-card">
       <div className="exp-card-body">
         <div className="exp-card-top">
-          <span className={`exp-card-icon accent-${accent}`}>
+          <div className="exp-card-icon-box">
             <Icon size={18} />
-          </span>
-          <span className="exp-card-meta">
-            {experiment.category} • {experiment.difficulty}
-          </span>
+          </div>
+          <div className="exp-card-badges">
+            <span className="exp-category-pill">{experiment.category}</span>
+            <span className={`exp-diff-pill ${diffClass}`}>{experiment.difficulty}</span>
+          </div>
         </div>
 
         <h3 className="exp-card-title">{experiment.title}</h3>
@@ -55,13 +53,21 @@ const ExperimentCard = ({ experiment, onStart }: ExperimentCardProps) => {
       </div>
 
       <div className="exp-card-footer">
+        <div className="exp-card-meta-info">
+          {experiment.port && (
+            <span className="exp-port-tag">
+              Port {experiment.port}
+            </span>
+          )}
+        </div>
+
         <button
           type="button"
           className="exp-card-btn"
           onClick={() => onStart?.(experiment)}
         >
-          Start Lab
-          <ArrowRight size={15} />
+          <span>Open Lab</span>
+          <ArrowRight size={14} />
         </button>
       </div>
     </article>

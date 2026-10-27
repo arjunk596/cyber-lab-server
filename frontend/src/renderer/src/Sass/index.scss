@@ -1,85 +1,210 @@
 * {
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-:root {
-    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+:root,
+[data-theme="light"] {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Monaco, Consolas, monospace;
 
-    --color-background: #0b1220;
-    --color-surface: #111a30;
-    --color-surface-2: #16213c;
-    --color-surface-3: #1c2949;
-    --color-border: #243353;
-    --color-border-strong: #31436b;
+  /* Sleek Apple-inspired Canvas and Surfaces */
+  --color-background: #f4f6f9;
+  --color-surface: #ffffff;
+  --color-surface-2: #f8fafc;
+  --color-surface-3: #edf1f7;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
 
-    --color-on-surface: #e8eef9;
-    --color-muted: #8b9bb8;
-    --color-faint: #5a6b8c;
+  /* Monotone Typography */
+  --color-on-surface: #0f172a;
+  --color-on-surface-sub: #334155;
+  --color-muted: #64748b;
+  --color-faint: #94a3b8;
 
-    --color-primary: #3b82f6;
-    --color-primary-hover: #2563eb;
-    --color-primary-active: #1d4ed8;
-    --color-primary-fixed-dim: rgba(59, 130, 246, 0.16);
-    --color-on-primary: #ffffff;
+  /* Primary Brand Blue */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-primary-fixed-dim: rgba(37, 99, 235, 0.08);
+  --color-on-primary: #ffffff;
 
-    --color-accent: #22d3ee;
-    --color-accent-dim: rgba(34, 211, 238, 0.14);
+  /* Energetic Futuristic Orange Shades (Reference UI) */
+  --color-orange: #ff6b00;
+  --color-orange-hover: #e65100;
+  --color-orange-light: #fff3e0;
+  --color-orange-dim: rgba(255, 107, 0, 0.14);
+  --color-orange-border: rgba(255, 107, 0, 0.38);
+  --color-orange-gradient: linear-gradient(135deg, #ff7a00 0%, #e65100 100%);
+  --color-orange-glow: 0 4px 14px rgba(255, 107, 0, 0.28);
 
-    --color-success: #22c55e;
-    --color-success-dim: rgba(34, 197, 94, 0.14);
-    --color-warning: #f59e0b;
-    --color-warning-dim: rgba(245, 158, 11, 0.14);
-    --color-danger: #ef4444;
-    --color-danger-dim: rgba(239, 68, 68, 0.14);
-    --color-info: #38bdf8;
-    --color-info-dim: rgba(56, 189, 248, 0.14);
+  /* Semantic Colors */
+  --color-accent: #0284c7;
+  --color-accent-dim: rgba(2, 132, 199, 0.08);
 
-    --severity-critical: #ef4444;
-    --severity-high: #f97316;
-    --severity-medium: #f59e0b;
-    --severity-low: #3b82f6;
-    --severity-info: #22d3ee;
+  --color-success: #10b981;
+  --color-success-dim: rgba(16, 185, 129, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-dim: rgba(245, 158, 11, 0.1);
+  --color-danger: #ef4444;
+  --color-danger-dim: rgba(239, 68, 68, 0.1);
+  --color-info: #2563eb;
+  --color-info-dim: rgba(37, 99, 235, 0.1);
+
+  /* Apple-like Subtle Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
+  --radius-card: 14px;
+  --radius-btn: 9px;
+}
+
+[data-theme="dark"] {
+  --color-background: #090d16;
+  --color-surface: #111827;
+  --color-surface-2: #162032;
+  --color-surface-3: #1f2d47;
+  --color-border: #1f2d47;
+  --color-border-strong: #2e4166;
+
+  --color-on-surface: #f8fafc;
+  --color-on-surface-sub: #cbd5e1;
+  --color-muted: #94a3b8;
+  --color-faint: #64748b;
+
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-active: #1d4ed8;
+  --color-primary-fixed-dim: rgba(59, 130, 246, 0.16);
+  --color-on-primary: #ffffff;
+
+  /* Energetic Futuristic Orange Shades in Dark Mode */
+  --color-orange: #ff851b;
+  --color-orange-hover: #ff7000;
+  --color-orange-light: rgba(255, 133, 27, 0.22);
+  --color-orange-dim: rgba(255, 133, 27, 0.18);
+  --color-orange-border: rgba(255, 133, 27, 0.45);
+  --color-orange-gradient: linear-gradient(135deg, #ff9500 0%, #e65100 100%);
+  --color-orange-glow: 0 4px 16px rgba(255, 133, 27, 0.35);
+
+  --color-accent: #38bdf8;
+  --color-accent-dim: rgba(56, 189, 248, 0.14);
+
+  --color-success: #22c55e;
+  --color-success-dim: rgba(34, 197, 94, 0.16);
+  --color-warning: #fbbf24;
+  --color-warning-dim: rgba(251, 191, 36, 0.16);
+  --color-danger: #f87171;
+  --color-danger-dim: rgba(248, 113, 113, 0.16);
+  --color-info: #38bdf8;
+  --color-info-dim: rgba(56, 189, 248, 0.16);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 28px -4px rgba(0, 0, 0, 0.65), 0 6px 12px -2px rgba(0, 0, 0, 0.4);
+  --radius-card: 14px;
+  --radius-btn: 9px;
 }
 
 body {
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-    font-family: var(--font-sans);
-    color: var(--color-on-surface);
-    -webkit-font-smoothing: antialiased;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-background);
+  font-family: var(--font-sans);
+  color: var(--color-on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: 15px;
-    overflow: auto;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-    display: none;
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+}
+
+.table th {
+  background: var(--color-surface-2);
+  color: var(--color-on-surface);
+  font-weight: 600;
 }
 
 #loading {
-    border-radius: 50%;
-    border: 2px solid var(--color-primary-fixed-dim);
-    border-top: 2px solid var(--color-primary);
-    animation: rotate 2s ease-in-out infinite;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary-fixed-dim);
+  border-top: 2px solid var(--color-primary);
+  animation: spinner 0.75s linear infinite;
 }
 
-@keyframes rotate {
-    from {
-        rotate: 0deg;
-    }
-
-    to {
-        rotate: 360deg;
-    }
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
+
+/* Master Component Stylesheet Imports */
+@import './Components/ExperimentCard.scss';
+@import './Components/LabInfo.scss';
+@import './Components/LabSimulation.scss';
+@import './Components/LabExperimentView.scss';
+@import './Components/LabTerminalDrawer.scss';
+@import './Components/LabDefencesView.scss';
+@import './Components/LabQuizView.scss';
+@import './Components/LabReviewView.scss';
+@import './Components/LabReportIssueModal.scss';
+@import './Components/LabFeedbackModal.scss';
+@import './Components/TrojanHorseExperiment.scss';
+@import './Components/BufferOverflowExperiment.scss';
+@import './Components/RsaExperiment.scss';
+@import './Components/PacketSniffingExperiment.scss';
+@import './Components/DosDdosExperiment.scss';
+@import './Components/SynFloodExperiment.scss';
+@import './Layouts/Header.scss';
+@import './Layouts/Home.scss';
+@import './Layouts/Lab.scss';

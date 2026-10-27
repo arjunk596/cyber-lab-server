@@ -1,0 +1,335 @@
+.dos-lab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+
+  /* 4 Telemetry Metrics Gauges with Apple Sleekness */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+
+    .metric-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card, 14px);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .metric-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--color-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .metric-num {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--color-on-surface);
+        letter-spacing: -0.5px;
+
+        &.success {
+          color: #10b981;
+        }
+
+        &.warning {
+          color: var(--color-orange);
+        }
+
+        &.danger {
+          color: #ef4444;
+        }
+      }
+
+      .metric-sub {
+        font-size: 12px;
+        color: var(--color-muted);
+      }
+    }
+  }
+
+  /* Universal DOS Card */
+  .dos-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card, 14px);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .card-top-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+
+      .header-icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: var(--color-primary-fixed-dim);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-on-surface);
+        margin: 0;
+        letter-spacing: -0.2px;
+      }
+
+      .card-subtitle {
+        font-size: 12px;
+        color: var(--color-muted);
+        display: block;
+        margin-top: 2px;
+      }
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      .profile-btn {
+        padding: 9px 16px;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--color-on-surface-sub);
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: var(--color-surface-3);
+        }
+
+        &.active-normal {
+          background: var(--color-primary);
+          border-color: var(--color-primary);
+          color: #ffffff;
+        }
+
+        &.active-dos {
+          background: var(--color-orange);
+          border-color: var(--color-orange);
+          color: #ffffff;
+        }
+
+        &.active-ddos {
+          background: #ef4444;
+          border-color: #ef4444;
+          color: #ffffff;
+        }
+      }
+
+      .divider-vert {
+        width: 1px;
+        height: 28px;
+        background: var(--color-border);
+        margin: 0 4px;
+      }
+
+      .toggle-mitigation-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--color-on-surface);
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &.mitigation-active {
+          background: rgba(16, 185, 129, 0.1);
+          border-color: rgba(16, 185, 129, 0.3);
+          color: #10b981;
+        }
+      }
+
+      .reset-sim-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        color: var(--color-muted);
+        cursor: pointer;
+
+        &:hover {
+          color: var(--color-on-surface);
+          background: var(--color-surface-3);
+        }
+      }
+    }
+  }
+
+  /* Two Column Botnet Canvas & Log */
+  .dos-two-col {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 1000px) {
+      grid-template-columns: 1fr;
+    }
+
+    .botnet-canvas {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 24px;
+      background: var(--color-surface-2);
+      border: 1px dashed var(--color-border-strong);
+      border-radius: 10px;
+      min-height: 240px;
+
+      .botnet-cluster {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .cluster-label {
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--color-muted);
+        }
+
+        .botnet-nodes-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 32px);
+          gap: 6px;
+
+          .bot-node {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-muted);
+
+            &.attacking {
+              background: var(--color-orange-dim);
+              border-color: var(--color-orange-border);
+              color: var(--color-orange);
+            }
+          }
+        }
+      }
+
+      .traffic-stream-pipe {
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        color: var(--color-muted);
+
+        &.flooding-pipe {
+          background: var(--color-orange-dim);
+          border-color: var(--color-orange-border);
+          color: var(--color-orange);
+        }
+      }
+
+      .target-server-node {
+        background: var(--color-surface);
+        border: 2px solid var(--color-primary);
+        border-radius: 10px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+
+        strong {
+          font-size: 13px;
+          color: var(--color-on-surface);
+        }
+
+        code {
+          font-size: 11px;
+          color: var(--color-muted);
+        }
+
+        .status-pill {
+          font-size: 11px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 9999px;
+
+          &.pill-good {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+          }
+
+          &.pill-bad {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+          }
+        }
+
+        &.down {
+          border-color: #ef4444;
+        }
+      }
+    }
+
+    .dos-log-stream {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      max-height: 260px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .log-row-text {
+        color: #94a3b8;
+        word-break: break-all;
+      }
+    }
+  }
+}

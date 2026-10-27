@@ -21,6 +21,10 @@ from datetime import datetime
 PORT = 8000
 DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "labs.json")
 
+ADMIN_USER = os.environ.get("CYBERLAB_ADMIN_USER", "admin")
+ADMIN_PASS = os.environ.get("CYBERLAB_ADMIN_PASS", "admin123")
+DELETE_PASS = os.environ.get("CYBERLAB_DELETE_PASS", "delete123")
+
 INITIAL_LABS = [
     {
         "id": "4ab9919e-3326-4775-9c85-cba8ef5f1475",
@@ -28,6 +32,8 @@ INITIAL_LABS = [
         "description": "A local Node.js Model Context Protocol (MCP) server that exposes shell command execution as a single tool, containerised on Ubuntu 24.04. The experiment demonstrates how an MCP server can behave as a trojan-horse vector - installed like ordinary developer tooling, then acting with the user's privileges - and how Docker containment limits the damage: every command runs inside a disposable container, the host filesystem is never mounted, and the endpoint stays bound to 127.0.0.1.",
         "category": "Malware Analysis",
         "difficulty": "Intermediate",
+        "port": 7331,
+        "web_url": "http://localhost:7331",
         "github_url": "https://github.com/ybhavesh-0915/trojan-horse-mcp",
         "aim": "https://raw.githubusercontent.com/ybhavesh-0915/trojan-horse-mcp/main/aim.md",
         "theory": "https://raw.githubusercontent.com/ybhavesh-0915/trojan-horse-mcp/main/theory.md",
@@ -44,12 +50,14 @@ INITIAL_LABS = [
         "description": "A self-contained virtual lab on the RSA public-key cryptosystem demonstrating semiprime modulus generation, prime factorization vulnerabilities, and Chosen Ciphertext Attack (CCA) on unpadded RSA.",
         "category": "Cryptography",
         "difficulty": "Intermediate",
+        "port": 8080,
+        "web_url": "http://localhost:8080",
         "github_url": "https://github.com/CarinLemos20/CSS-lab-simulation",
-        "aim": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/README.md",
-        "theory": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/README.md",
-        "objective": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/README.md",
-        "procedure": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/README.md",
-        "references": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/README.md",
+        "aim": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/aim.md",
+        "theory": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/theory.md",
+        "objective": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/objective.md",
+        "procedure": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/procedure.md",
+        "references": "https://raw.githubusercontent.com/CarinLemos20/CSS-lab-simulation/main/reference.md",
         "created_at": "2026-10-27 09:00:00",
         "github_issue_url": "https://github.com/CarinLemos20/CSS-lab-simulation/issues",
         "github_repo_name": "CSS-lab-simulation"
@@ -60,12 +68,14 @@ INITIAL_LABS = [
         "description": "Hands-on simulation of Denial of Service (SYN Flood/UDP Flood) and Distributed Denial of Service attacks on network infrastructure, demonstrating traffic analysis, server saturation, and firewall/rate-limiting protections.",
         "category": "Network",
         "difficulty": "Intermediate",
+        "port": 5050,
+        "web_url": "http://localhost:5050",
         "github_url": "https://github.com/Xombi17/css-virtual-lab",
-        "aim": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/docs/aim.md",
-        "theory": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/docs/theory.md",
-        "objective": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/docs/objective.md",
-        "procedure": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/docs/procedure.md",
-        "references": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/docs/references.md",
+        "aim": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/aim.md",
+        "theory": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/theory.md",
+        "objective": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/objective.md",
+        "procedure": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/procedure.md",
+        "references": "https://raw.githubusercontent.com/Xombi17/css-virtual-lab/main/reference.md",
         "created_at": "2026-10-27 09:00:00",
         "github_issue_url": "https://github.com/Xombi17/css-virtual-lab/issues",
         "github_repo_name": "css-virtual-lab"
@@ -76,11 +86,13 @@ INITIAL_LABS = [
         "description": "Interactive Docker-isolated educational lab demonstrating classic stack-based buffer overflow vulnerabilities in C, return address overwriting, control-flow hijacking, and memory-safety mitigations.",
         "category": "System",
         "difficulty": "Intermediate",
+        "port": 3001,
+        "web_url": "http://localhost:3001",
         "github_url": "https://github.com/beeth73/CSS-LAB-BOA",
-        "aim": "https://raw.githubusercontent.com/beeth73/CSS-LAB-BOA/main/README.md",
+        "aim": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/CSS-LAB-BOA/aim.md",
         "theory": "https://raw.githubusercontent.com/beeth73/CSS-LAB-BOA/main/docs/theory.md",
-        "objective": "https://raw.githubusercontent.com/beeth73/CSS-LAB-BOA/main/README.md",
-        "procedure": "https://raw.githubusercontent.com/beeth73/CSS-LAB-BOA/main/GETTING_STARTED.md",
+        "objective": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/CSS-LAB-BOA/objective.md",
+        "procedure": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/CSS-LAB-BOA/procedure.md",
         "references": "https://raw.githubusercontent.com/beeth73/CSS-LAB-BOA/main/docs/references.md",
         "created_at": "2026-10-27 09:00:00",
         "github_issue_url": "https://github.com/beeth73/CSS-LAB-BOA/issues",
@@ -92,31 +104,98 @@ INITIAL_LABS = [
         "description": "Interactive simulation demonstrating how TCP half-open connections exhaust server backlog queues during a SYN flood attack, and how SYN cookies, backlog expansion, and rate limiting restore availability.",
         "category": "Network",
         "difficulty": "Beginner",
+        "port": 8081,
+        "web_url": "http://localhost:8081",
         "github_url": "https://github.com/ManvithKarkera/css_mini",
-        "aim": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/README.md",
-        "theory": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/README.md",
-        "objective": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/README.md",
-        "procedure": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/CONTRACT.md",
-        "references": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/README.md",
+        "aim": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/aim.md",
+        "theory": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/theory.md",
+        "objective": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/objective.md",
+        "procedure": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/procedure.md",
+        "references": "https://raw.githubusercontent.com/ManvithKarkera/css_mini/main/reference.md",
         "created_at": "2026-10-27 09:00:00",
         "github_issue_url": "https://github.com/ManvithKarkera/css_mini/issues",
         "github_repo_name": "css_mini"
+    },
+    {
+        "id": "199f781d-93e3-4f18-92cd-3a1cb328c8a7",
+        "title": "Packet Sniffing, ARP Spoofing & Protocol Analysis",
+        "description": "Interactive virtual laboratory simulating network packet analysis, promiscuous mode sniffing, ARP cache poisoning (MITM), cleartext vs TLS 1.3 traffic inspection, and network defense strategies.",
+        "category": "Network",
+        "difficulty": "Intermediate",
+        "port": 3002,
+        "web_url": "http://localhost:3002",
+        "github_url": "https://github.com/tapu3983-hue/packet_spoofing",
+        "github_repo_name": "packet_spoofing",
+        "github_issue_url": "https://github.com/tapu3983-hue/packet_spoofing/issues",
+        "aim": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/packet_spoofing/aim.md",
+        "theory": "https://raw.githubusercontent.com/tapu3983-hue/packet_spoofing/main/README.md",
+        "objective": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/packet_spoofing/objective.md",
+        "procedure": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/packet_spoofing/procedure.md",
+        "references": "https://raw.githubusercontent.com/arjunk596/cyber-lab-server/main/lab-fixes/packet_spoofing/reference.md",
+        "created_at": "2026-10-27 11:27:06"
     }
 ]
+
+FEEDBACK_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "feedback.json")
+LAB_FIXES_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lab-fixes"))
+
+def load_feedback():
+    if os.path.exists(FEEDBACK_FILE):
+        try:
+            with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+        except Exception:
+            pass
+    return []
+
+def save_feedback(feedbacks):
+    tmp = FEEDBACK_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(feedbacks, f, indent=2)
+    os.replace(tmp, FEEDBACK_FILE)
+
+def resolve_local_doc(repo_name, section):
+    sec = section.lower().replace(".md", "")
+    candidates = [
+        f"{sec}.md",
+        f"{sec}",
+        f"docs/{sec}.md",
+        f"docs/{sec}"
+    ]
+    if sec == "references":
+        candidates.insert(0, "reference.md")
+    elif sec == "reference":
+        candidates.insert(0, "references.md")
+
+    repo_dir = os.path.join(LAB_FIXES_DIR, repo_name)
+    if os.path.isdir(repo_dir):
+        for c in candidates:
+            p = os.path.join(repo_dir, c)
+            if os.path.isfile(p):
+                with open(p, "r", encoding="utf-8", errors="replace") as f:
+                    return f.read()
+
+    return None
 
 def load_labs():
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                if isinstance(data, list) and len(data) > 0:
+                    return data
         except Exception:
             pass
     save_labs(INITIAL_LABS)
     return INITIAL_LABS
 
 def save_labs(labs):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
+    tmp = DATA_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(labs, f, indent=2)
+    os.replace(tmp, DATA_FILE)
 
 CSS_STYLES = """
 :root {
@@ -213,17 +292,17 @@ class LabServerHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(data)
             return
 
-        # 2. GET /upload -> Upload form (admin / admin123)
+        # 2. GET /upload -> Upload form
         if path == "/upload":
-            if not self.require_auth("admin", "admin123", "Upload Lab"):
+            if not self.require_auth(ADMIN_USER, ADMIN_PASS, "Upload Lab"):
                 return
             html = self.render_form(title="Upload New Lab", action="/upload")
             self.send_html(html)
             return
 
-        # 3. GET /edit/:id -> Edit form (admin / admin123)
+        # 3. GET /edit/:id -> Edit form
         if path.startswith("/edit/"):
-            if not self.require_auth("admin", "admin123", "Edit Lab"):
+            if not self.require_auth(ADMIN_USER, ADMIN_PASS, "Edit Lab"):
                 return
             lab_id = path[len("/edit/"):]
             labs = load_labs()
@@ -242,15 +321,59 @@ class LabServerHandler(http.server.BaseHTTPRequestHandler):
             self.send_html(html)
             return
 
+        # 5. GET /feedback -> Return submitted student feedback
+        if path == "/feedback":
+            feedbacks = load_feedback()
+            self.send_json(feedbacks)
+            return
+
+        # 6. GET /docs/<repo>/<section> -> Local Markdown resolver
+        if path.startswith("/docs/"):
+            parts = path.strip("/").split("/")
+            if len(parts) >= 3:
+                repo_name = parts[1]
+                section = parts[2]
+                content = resolve_local_doc(repo_name, section)
+                if content:
+                    data = content.encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/markdown; charset=utf-8")
+                    self.send_header("Content-Length", str(len(data)))
+                    self.send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+
         self.send_error(404, "Not Found")
 
     def do_POST(self):
         url_parts = urllib.parse.urlparse(self.path)
         path = url_parts.path
 
+        # Feedback POST
+        if path == "/feedback":
+            body = self.parse_body()
+            feedbacks = load_feedback()
+            entry = {
+                "id": str(uuid.uuid4()),
+                "lab_id": str(body.get("lab_id") or body.get("experiment_id") or ""),
+                "lab_title": str(body.get("lab_title") or body.get("experiment_title") or ""),
+                "rating": int(body.get("rating", 5)),
+                "ease": int(body.get("ease") or body.get("ease_of_understanding") or 5),
+                "difficulty": str(body.get("difficulty") or body.get("perceived_difficulty") or "Appropriate"),
+                "objective_achieved": bool(body.get("objective_achieved", True)),
+                "comments": str(body.get("comments") or ""),
+                "suggestions": str(body.get("suggestions") or ""),
+                "submitted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            feedbacks.append(entry)
+            save_feedback(feedbacks)
+            self.send_json({"success": True, "message": "Feedback recorded successfully", "feedback": entry})
+            return
+
         # Upload POST
         if path == "/upload":
-            if not self.require_auth("admin", "admin123", "Upload Lab"):
+            if not self.require_auth(ADMIN_USER, ADMIN_PASS, "Upload Lab"):
                 return
             lab = self.parse_body()
             if not lab.get("id"):
@@ -270,7 +393,7 @@ class LabServerHandler(http.server.BaseHTTPRequestHandler):
 
         # Edit POST
         if path.startswith("/edit/"):
-            if not self.require_auth("admin", "admin123", "Edit Lab"):
+            if not self.require_auth(ADMIN_USER, ADMIN_PASS, "Edit Lab"):
                 return
             lab_id = path[len("/edit/"):]
             updated = self.parse_body()
@@ -290,7 +413,7 @@ class LabServerHandler(http.server.BaseHTTPRequestHandler):
 
         # Delete POST
         if path.startswith("/delete/"):
-            if not self.require_auth("admin", "delete123", "Delete Lab Authorization"):
+            if not self.require_auth(ADMIN_USER, DELETE_PASS, "Delete Lab Authorization"):
                 return
             lab_id = path[len("/delete/"):]
             labs = load_labs()

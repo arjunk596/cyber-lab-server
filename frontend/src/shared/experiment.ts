@@ -13,6 +13,8 @@ export interface Experiment {
   description: string
   category: ExperimentCategory
   difficulty: ExperimentDifficulty
+  port?: number
+  web_url?: string
   github_url: string
   github_repo_name: string
   github_issue_url: string

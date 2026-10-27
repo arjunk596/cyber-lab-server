@@ -1,0 +1,7 @@
+services:
+  packet-spoofing-lab:
+    build: .
+    container_name: cyberlab_packet_spoofing
+    ports:
+      - "3002:3002"
+    restart: unless-stopped

@@ -13,6 +13,15 @@
     connect-src 'self' https://raw.githubusercontent.com https://*.githubusercontent.com https://*.ngrok-free.dev http://localhost:3000 http://localhost:*;
   " />
 
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('cyberlab-theme');
+        var theme = stored || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>

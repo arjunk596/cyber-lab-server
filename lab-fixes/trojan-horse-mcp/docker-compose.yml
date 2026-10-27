@@ -1,0 +1,10 @@
+services:
+  trojan-mcp:
+    build: .
+    image: trojan-mcp
+    container_name: trojan-mcp-sandboxed
+    restart: unless-stopped
+    ports:
+      - "7331:7331"
+    environment:
+      - PORT=7331

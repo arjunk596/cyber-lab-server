@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSA Cryptosystem Simulation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="brand">
+        <span class="badge">CRCE Cyber Lab</span>
+        <h1>RSA Cryptosystem: Factoring Challenge & Chosen Ciphertext Attack</h1>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator"></span> Active Session
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="card">
+        <h2>Module 1 — Semiprime Modulus Factoring Challenge</h2>
+        <p class="desc">RSA security depends on the intractability of factoring large semiprimes. In this educational challenge, compute the prime factors $p$ and $q$ of modulus $n$.</p>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Public Modulus (n):</label>
+            <input type="number" id="modulus-n" value="3233" readonly>
+            <small>Public Exponent (e) = 17</small>
+          </div>
+          <div class="form-group">
+            <label>Submit Prime Factor p:</label>
+            <input type="number" id="factor-p" placeholder="Enter prime p (e.g. 61)">
+            <label style="margin-top:8px;">Submit Prime Factor q:</label>
+            <input type="number" id="factor-q" placeholder="Enter prime q (e.g. 53)">
+            <button class="btn btn-primary" id="btn-verify-factors" style="margin-top:10px;">Verify Factorization</button>
+          </div>
+        </div>
+        <div id="factor-result" class="alert-box info">Status: Awaiting factor submission...</div>
+      </section>
+
+      <section class="card">
+        <h2>Module 2 — Key Generation & Modular Arithmetic</h2>
+        <div class="grid-3">
+          <div class="metric-box">
+            <div class="metric-label">Euler's Totient φ(n)</div>
+            <div class="metric-val" id="val-totient">3120</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Public Key (e, n)</div>
+            <div class="metric-val" id="val-pubkey">(17, 3233)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Private Exponent (d)</div>
+            <div class="metric-val" id="val-privkey">2753</div>
+          </div>
+        </div>
+        <div style="margin-top: 15px;">
+          <label>Test Plaintext Message (M &lt; n):</label>
+          <div style="display:flex; gap:10px; margin-top:5px;">
+            <input type="number" id="input-msg" value="65" style="max-width:200px;">
+            <button class="btn btn-secondary" id="btn-encrypt">Encrypt M</button>
+            <button class="btn btn-secondary" id="btn-decrypt">Decrypt C</button>
+          </div>
+          <p id="crypto-output" style="margin-top:10px; font-family:monospace; color:#2563eb;">Ciphertext C = 65^17 mod 3233 = 2790</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Module 3 — Chosen Ciphertext Attack (CCA) Simulation</h2>
+        <p class="desc">Unpadded (textbook) RSA is multiplicatively homomorphic: $E(M_1) \times E(M_2) \equiv E(M_1 \times M_2) \pmod n$. An attacker can blind ciphertext $C$, query the decryption oracle with $C'$, and recover $M$ without possessing $d$.</p>
+        
+        <div class="cca-steps">
+          <div class="step-card">
+            <h4>Step 1: Target Ciphertext</h4>
+            <p>Target Ciphertext: <strong id="cca-c">2790</strong> (Secret Message M)</p>
+          </div>
+          <div class="step-card">
+            <h4>Step 2: Generate Blinding Factor (R)</h4>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="input-r" value="3" style="width:100px;">
+              <button class="btn btn-secondary" id="btn-blind">Compute C' = (C * R^e) mod n</button>
+            </div>
+            <p id="cca-blind-out" style="margin-top:6px; font-family:monospace;">Blinded Ciphertext C' = 2552</p>
+          </div>
+          <div class="step-card">
+            <h4>Step 3: Query Decryption Oracle</h4>
+            <button class="btn btn-primary" id="btn-oracle">Submit C' to Decryption Oracle</button>
+            <p id="cca-oracle-out" style="margin-top:6px; font-family:monospace;">Oracle returns blinded plaintext M' = (C')^d mod n = 195</p>
+          </div>
+          <div class="step-card">
+            <h4>Step 4: Unblind & Recover Message</h4>
+            <button class="btn btn-success" id="btn-unblind">Recover Original M = (M' * R⁻¹) mod n</button>
+            <p id="cca-final-out" style="margin-top:6px; font-size:16px; font-weight:600; color:#16a34a;">Awaiting unblinding...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

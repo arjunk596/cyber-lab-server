@@ -1,0 +1,1437 @@
+/* ==========================================================================
+   base.css — Retro-Tech Electronic Workstation Design System
+   Contract Owner: Yash Masaye & Team
+   Design: Industrial networking instrument aesthetic inspired by physical keyboards,
+   compact LCD screens, hardware control panels, and precision electronic instruments.
+   ========================================================================== */
+
+/* ---- 1. Tokens (Light Theme: Warm Off-White / Industrial Putty) --------- */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Surfaces & Canvas */
+  --color-bg: #eceae3;
+  --color-surface: #f9f8f5;
+  --color-surface-2: #e2dfd5;
+  --color-surface-inset: #d7d3c7;
+  --color-text: #141a24;
+  --color-muted: #546073;
+  --color-border: #cac6b8;
+  --color-border-dark: #aba595;
+  --color-border-light: #ffffff;
+
+  /* Primary Accent: Cobalt Blue & Physical Keycaps */
+  --color-primary: #1852d4;
+  --color-primary-contrast: #ffffff;
+  --color-focus: #1852d4;
+
+  /* Hardware Accents */
+  --color-accent-orange: #f2542d;
+  --color-accent-amber: #d97706;
+  --color-accent-cyan: #0284c7;
+
+  /* Network Roles */
+  --color-legit: #0b8054;
+  --color-attack: #e64a19;
+  --color-pending: #c67a0a;
+  --color-rejected: #5f6b7c;
+  --color-completed: #1852d4;
+
+  /* Status Colors */
+  --color-healthy: #0b8054;
+  --color-pressure: #b86f00;
+  --color-degraded: #d44c00;
+  --color-unavailable: #c5221f;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* Geometry & Radii */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+
+  /* Tactile Shadows & Physical Insets */
+  --shadow-sm: 0 1px 2px rgba(20, 26, 36, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  --shadow: 0 2px 5px rgba(20, 26, 36, 0.08), 0 8px 24px rgba(20, 26, 36, 0.05), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  --shadow-keycap: 0 2px 0 var(--color-border-dark), 0 3px 6px rgba(20, 26, 36, 0.09);
+  --shadow-keycap-primary: 0 2px 0 #0f399e, 0 3px 6px rgba(24, 82, 212, 0.25);
+  --shadow-keycap-danger: 0 2px 0 #9e2311, 0 3px 6px rgba(230, 74, 25, 0.25);
+  --shadow-inset: inset 0 2px 4px rgba(20, 26, 36, 0.12), inset 0 0 0 1px var(--color-border);
+  --shadow-lcd: inset 0 2px 6px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Layout dimensions */
+  --header-h: 68px;
+  --page-max: 1280px;
+
+  /* Technical Dotted Grid */
+  --dot-color: rgba(20, 26, 36, 0.07);
+}
+
+/* ---- 1b. Tokens (Dark Theme: Midnight Graphite & CRT Instrument) -------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces & Canvas */
+  --color-bg: #0f141c;
+  --color-surface: #18202c;
+  --color-surface-2: #212b3a;
+  --color-surface-inset: #131922;
+  --color-text: #edf2f7;
+  --color-muted: #8e9eaf;
+  --color-border: #2e3b4d;
+  --color-border-dark: #19212d;
+  --color-border-light: rgba(255, 255, 255, 0.08);
+
+  /* Primary Accent: Crisp Telemetry Blue */
+  --color-primary: #3b82f6;
+  --color-primary-contrast: #070c14;
+  --color-focus: #60a5fa;
+
+  /* Hardware Accents */
+  --color-accent-orange: #ff6b4a;
+  --color-accent-amber: #fbbf24;
+  --color-accent-cyan: #38bdf8;
+
+  /* Network Roles */
+  --color-legit: #34d399;
+  --color-attack: #ff6b4a;
+  --color-pending: #fbbf24;
+  --color-rejected: #8e9eaf;
+  --color-completed: #60a5fa;
+
+  /* Status Colors */
+  --color-healthy: #34d399;
+  --color-pressure: #fbbf24;
+  --color-degraded: #fb923c;
+  --color-unavailable: #f87171;
+
+  /* Tactile Shadows & CRT Insets */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  --shadow-keycap: 0 2px 0 #121822, 0 3px 8px rgba(0, 0, 0, 0.5);
+  --shadow-keycap-primary: 0 2px 0 #1d4ed8, 0 3px 8px rgba(59, 130, 246, 0.3);
+  --shadow-keycap-danger: 0 2px 0 #b91c1c, 0 3px 8px rgba(239, 68, 68, 0.3);
+  --shadow-inset: inset 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 0 0 1px var(--color-border);
+  --shadow-lcd: inset 0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --dot-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Fallback for system dark mode when data-theme is not explicitly set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0f141c;
+    --color-surface: #18202c;
+    --color-surface-2: #212b3a;
+    --color-surface-inset: #131922;
+    --color-text: #edf2f7;
+    --color-muted: #8e9eaf;
+    --color-border: #2e3b4d;
+    --color-border-dark: #19212d;
+    --color-border-light: rgba(255, 255, 255, 0.08);
+    --color-primary: #3b82f6;
+    --color-primary-contrast: #070c14;
+    --color-focus: #60a5fa;
+    --color-accent-orange: #ff6b4a;
+    --color-accent-amber: #fbbf24;
+    --color-accent-cyan: #38bdf8;
+    --color-legit: #34d399;
+    --color-attack: #ff6b4a;
+    --color-pending: #fbbf24;
+    --color-rejected: #8e9eaf;
+    --color-completed: #60a5fa;
+    --color-healthy: #34d399;
+    --color-pressure: #fbbf24;
+    --color-degraded: #fb923c;
+    --color-unavailable: #f87171;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    --shadow: 0 3px 8px rgba(0, 0, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    --shadow-keycap: 0 2px 0 #121822, 0 3px 8px rgba(0, 0, 0, 0.5);
+    --shadow-keycap-primary: 0 2px 0 #1d4ed8, 0 3px 8px rgba(59, 130, 246, 0.3);
+    --shadow-keycap-danger: 0 2px 0 #b91c1c, 0 3px 8px rgba(239, 68, 68, 0.3);
+    --shadow-inset: inset 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 0 0 1px var(--color-border);
+    --shadow-lcd: inset 0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.05);
+    --dot-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ---- 2. Reset and Base -------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + var(--space-4));
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 1.5px);
+  background-size: 20px 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[hidden] { display: none !important; }
+
+h1, h2, h3, h4 {
+  line-height: 1.25;
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+h1 { font-size: 1.25rem; }
+h2 { font-size: 1.125rem; }
+h3 { font-size: 1rem; }
+p { margin: 0 0 var(--space-3); }
+ul, ol { margin: 0 0 var(--space-3); padding-left: 1.4em; }
+a { color: var(--color-primary); text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+
+code, kbd, samp {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border);
+}
+svg { max-width: 100%; vertical-align: middle; }
+dl { margin: 0; }
+dd { margin: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+[tabindex="-1"]:focus { outline: none; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- 3. Layout Structure ------------------------------------------------ */
+.container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+/* Application Header: Industrial Hardware Instrument Panel */
+#lab-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  max-width: none;
+  min-height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) max(var(--space-4), calc((100% - var(--page-max)) / 2 + var(--space-4)));
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+#lab-header h1 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 1.1875rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+/* Power & telemetry LED marker on the title */
+#lab-header h1::before {
+  content: "";
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-healthy);
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-border), 0 0 8px var(--color-healthy);
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  padding: 0 var(--space-3);
+}
+.theme-toggle__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Main Laboratory Shell */
+main.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+main.container > .section {
+  margin: 0;
+  width: 100%;
+  clear: both;
+}
+
+#screen-guidelines,
+#section-theory {
+  width: 100%;
+}
+
+/* Two-column Lab Workspace: Left rail (Steps & Log), Right rail (Lab stations) */
+.lab-workspace {
+  display: grid;
+  grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  width: 100%;
+}
+
+.lab-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  width: 100%;
+}
+
+.lab-sidebar > .section {
+  position: static;
+  margin: 0;
+  width: 100%;
+}
+
+#stepper-section,
+#log {
+  position: static;
+  margin: 0;
+  width: 100%;
+}
+
+/* The Lab Rail: Topology, Controls, Dashboard */
+.lab-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  width: 100%;
+}
+
+/* Full-width sections below the two-column lab workspace: Mitigation, Comparison, Workshop, Quiz */
+#mitigation,
+#comparison,
+#workshop,
+#quiz {
+  width: 100%;
+  clear: both;
+}
+
+@media (max-width: 960px) {
+  .lab-workspace {
+    display: flex;
+    flex-direction: column;
+  }
+  .lab-sidebar {
+    display: contents;
+  }
+  #stepper-section {
+    order: 1;
+  }
+  .lab-main {
+    order: 2;
+  }
+  #log {
+    order: 3;
+  }
+}
+
+/* ---- 4. Sections and Hardware Modules ----------------------------------- */
+.section {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-5);
+  position: relative;
+}
+
+.section > h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1.5px solid var(--color-border);
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+.section .card {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+
+/* "Simulated data" Badge: Technical Metrology Label */
+.sim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.sim-badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-pending);
+  box-shadow: 0 0 4px var(--color-pending);
+}
+
+/* ---- 5. Tactile Keycap Buttons (Inspired by Precision Mechanical Keycaps) ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-top: 1.5px solid var(--color-border-light, #ffffff);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 0 var(--color-border-dark), 0 3px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.08s;
+  position: relative;
+}
+
+[data-theme="dark"] .btn {
+  box-shadow: 0 2px 0 #0d1219, 0 3px 8px rgba(0, 0, 0, 0.6);
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  border-color: var(--color-muted);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 transparent !important;
+}
+
+/* Primary Button: Industrial Blue Keycap */
+.btn--primary {
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  border-top-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 0 #0f399e, 0 4px 8px rgba(24, 82, 212, 0.35);
+}
+[data-theme="dark"] .btn--primary {
+  box-shadow: 0 2px 0 #1d4ed8, 0 4px 10px rgba(59, 130, 246, 0.4);
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  filter: brightness(1.1);
+}
+
+/* Danger Button: Safety Orange/Vermilion Keycap */
+.btn--danger {
+  color: #ffffff;
+  background: var(--color-attack);
+  border-color: var(--color-attack);
+  box-shadow: var(--shadow-keycap-danger);
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--color-attack);
+  border-color: var(--color-attack);
+  filter: brightness(1.08);
+}
+
+/* Ghost Button: Recessed Equipment Keycap */
+.btn--ghost {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--color-surface);
+  border-color: var(--color-muted);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  color: var(--color-muted);
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  border-style: solid;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+/* Header Stop Button: Distinct Emergency Halo */
+#btn-stop {
+  min-width: 88px;
+}
+
+/* Soft Guide on the Recommended Next Action */
+@keyframes next-pulse {
+  0%, 100% {
+    box-shadow: var(--shadow-keycap-primary), 0 0 0 0 rgba(24, 82, 212, 0.45);
+  }
+  50% {
+    box-shadow: var(--shadow-keycap-primary), 0 0 0 6px rgba(24, 82, 212, 0);
+  }
+}
+.btn.is-next:not(:disabled) {
+  animation: next-pulse 2s ease-in-out infinite;
+}
+.btn--danger.is-next:not(:disabled) {
+  animation-name: none;
+  box-shadow: var(--shadow-keycap-danger), 0 0 0 4px rgba(230, 74, 25, 0.25);
+}
+
+/* Small Button Variant */
+.btn--sm {
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  font-size: 0.75rem;
+}
+
+/* ---- 6. Forms & Industrial Controls ------------------------------------- */
+label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.field,
+select,
+input[type="text"],
+input[type="number"] {
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select.field, select {
+  padding-right: var(--space-4);
+  cursor: pointer;
+}
+.field:hover:not(:disabled) { border-color: var(--color-muted); }
+.field:focus {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px rgba(24, 82, 212, 0.18);
+  outline: none;
+}
+.field:disabled {
+  color: var(--color-muted);
+  background: var(--color-surface-2);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Tactile Checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  user-select: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.checkbox:hover { border-color: var(--color-muted); background: var(--color-surface); }
+.checkbox input[type="checkbox"] {
+  flex: none;
+  width: 20px; height: 20px;
+  margin: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* Hardware Toggle Switch (Mitigation items & .toggle) */
+.toggle,
+.mitigation-item input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 46px; height: 26px;
+  margin: 0;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-inset);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.toggle::before,
+.mitigation-item input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+}
+.toggle:checked,
+.mitigation-item input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.toggle:checked::before,
+.mitigation-item input[type="checkbox"]:checked::before {
+  background: var(--color-primary-contrast);
+  transform: translateX(20px);
+}
+.toggle:disabled,
+.mitigation-item input[type="checkbox"]:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+/* ---- 7. Before You Begin Screen ----------------------------------------- */
+.guidelines { padding: var(--space-6); }
+.guidelines > h2 { font-size: 1.375rem; margin-top: var(--space-3); }
+
+/* Hero Banner: Equipment Identity Module */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-6);
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(242, 84, 45, 0.4) 0 8px, transparent 9px),
+    radial-gradient(circle at 82% 64%, rgba(52, 211, 153, 0.35) 0 6px, transparent 7px),
+    linear-gradient(135deg, #111a2e 0%, #172a50 50%, #1e3a75 100%);
+  border: 1.5px solid #2e4370;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+.hero__eyebrow {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+.hero__title {
+  margin: 0 0 var(--space-4);
+  max-width: 26em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: #dbeafe;
+}
+.hero__facts li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.hero__facts strong { color: #ffffff; font-size: 0.9375rem; }
+
+#lab-objective {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  font-size: 1rem;
+  background: var(--color-surface-2);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+#lab-objective:empty { display: none; }
+
+.disclaimer {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-pending) 10%, var(--color-surface));
+  border: 1px dashed var(--color-pending);
+  border-radius: var(--radius-sm);
+}
+.disclaimer::before { content: "\24D8"; font-weight: 700; line-height: 1.4; color: var(--color-pending); }
+.disclaimer:empty { display: none; }
+
+.guidelines ol {
+  list-style: none;
+  counter-reset: guideline;
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.guidelines ol > li {
+  counter-increment: guideline;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+.guidelines ol > li::before {
+  content: counter(guideline);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px; height: 24px;
+  margin-top: 1px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+.guidelines-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+.guidelines .checkbox { margin-top: var(--space-2); }
+
+/* ---- 8. Theory Section -------------------------------------------------- */
+.theory h3 {
+  margin-top: var(--space-5);
+  font-size: 1rem;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+.theory h3:first-child { margin-top: 0; }
+.theory p {
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.6;
+  margin: var(--space-2) 0 var(--space-3);
+}
+#theory-content {
+  width: 100%;
+  margin-bottom: var(--space-4);
+}
+
+#handshake-demo {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+.handshake-caption {
+  min-height: 2em;
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.handshake-list {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  counter-reset: handshake;
+  width: 100%;
+}
+.handshake-list > li {
+  counter-increment: handshake;
+  position: relative;
+  padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-4) + 36px);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  max-width: 100%;
+}
+.handshake-list > li::before {
+  content: counter(handshake);
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 24px; height: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary-contrast);
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+.handshake-list__name { font-family: var(--font-mono); color: var(--color-primary); }
+
+.analogy {
+  width: 100%;
+  max-width: 100%;
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-pending) 8%, var(--color-surface));
+  border-left: 4px solid var(--color-pending);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+}
+.analogy p {
+  margin: var(--space-2) 0 var(--space-3);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
+}
+.analogy__title {
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-pending);
+}
+
+/* Theory Demo Card: Fitted to Width with Precision Instrument Controls */
+.theory-demo-card {
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  width: 100%;
+  max-width: 100%;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-sizing: border-box;
+}
+.theory-demo-card svg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 140px;
+  display: block;
+}
+.handshake-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.handshake-controls .btn {
+  min-height: 32px;
+  font-size: 0.8125rem;
+}
+
+/* Pizza Analogy Interactive/Animated Diagram */
+.pizza-analogy {
+  margin: var(--space-4) 0 var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.pizza-art-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+.pizza-art-badge {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pizza-art-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.pizza-btn--sim {
+  background: var(--color-attack);
+  color: #ffffff;
+  border-color: var(--color-attack);
+  box-shadow: var(--shadow-keycap-danger);
+}
+.pizza-btn--reset {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.pizza-art-stage {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr minmax(180px, 240px);
+  gap: var(--space-3);
+  align-items: stretch;
+}
+@media (max-width: 860px) {
+  .pizza-art-stage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pizza-art-actor {
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.pizza-art-actor--attacker {
+  border-left: 4px solid var(--color-attack);
+}
+.pizza-art-actor--victim {
+  border-left: 4px solid var(--color-legit);
+}
+.pizza-actor-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.pizza-actor-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: var(--color-text);
+}
+.pizza-actor-sub {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: 1.35;
+}
+.pizza-actor-feed {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pizza-order-ticket {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--color-attack) 15%, var(--color-surface));
+  color: var(--color-attack);
+  border: 1px dashed var(--color-attack);
+}
+
+.pizza-art-counter-bay {
+  padding: var(--space-3);
+  background: var(--color-surface-inset);
+  border: 1.5px solid var(--color-pending);
+  border-radius: var(--radius-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pizza-counter-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+}
+.pizza-counter-counter {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-pending);
+  background: var(--color-surface);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-pending);
+}
+.pizza-shelf {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+}
+.pizza-box {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 4px 6px;
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--color-pending) 20%, var(--color-surface));
+  color: var(--color-text);
+  border: 1px solid var(--color-pending);
+}
+.pizza-shelf-alert {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--color-attack);
+  color: #ffffff;
+  animation: pulse-alert 1.5s infinite ease-in-out;
+}
+@keyframes pulse-alert {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.pizza-counter-expl {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+  margin-top: auto;
+}
+
+.pizza-victim-outcome {
+  margin-top: auto;
+  padding: var(--space-2);
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+.pizza-victim-outcome.is-blocked {
+  background: color-mix(in srgb, var(--color-attack) 15%, var(--color-surface));
+  border: 1px solid var(--color-attack);
+}
+.pizza-victim-outcome.is-served {
+  background: color-mix(in srgb, var(--color-healthy) 15%, var(--color-surface));
+  border: 1px solid var(--color-healthy);
+}
+.pizza-outcome-head {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-attack);
+  margin-bottom: 2px;
+}
+.pizza-outcome-msg {
+  margin: 0;
+}
+
+.theory {
+  display: block;
+}
+.theory > h2 {
+  margin-bottom: var(--space-4);
+}
+.theory > #btn-close-theory {
+  margin-top: var(--space-4);
+}
+
+/* ---- 9. Stepper and Central Step Station -------------------------------- */
+.stepper { margin-bottom: var(--space-4); }
+.stepper ol, #step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.08s;
+}
+
+/* Step number keycap badge */
+.step::before {
+  content: attr(data-step);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px; height: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid currentColor;
+  background: transparent;
+}
+
+/* Status text badge */
+.step::after {
+  content: "";
+  margin-left: auto;
+  padding-left: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Locked Step */
+.step[data-status="locked"], .step--locked {
+  color: var(--color-muted);
+  background: var(--color-surface-2);
+  border-style: dashed;
+  opacity: 0.75;
+}
+.step[data-status="locked"]::before, .step--locked::before { border-style: dashed; }
+.step[data-status="locked"]::after, .step--locked::after { content: "\1F512 Locked"; }
+
+/* Ready Step */
+.step[data-status="ready"], .step--ready {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+.step[data-status="ready"]::before, .step--ready::before {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.step[data-status="ready"]::after, .step--ready::after {
+  content: "Ready";
+  color: var(--color-primary);
+}
+
+/* In-Progress Step: Active Hardware State */
+@keyframes step-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(24, 82, 212, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(24, 82, 212, 0); }
+}
+.step[data-status="in-progress"], .step--in-progress {
+  color: #ffffff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  animation: step-pulse 2s ease-in-out infinite;
+}
+.step[data-status="in-progress"]::before, .step--in-progress::before {
+  color: var(--color-primary);
+  background: #ffffff;
+  border-color: #ffffff;
+}
+.step[data-status="in-progress"]::after, .step--in-progress::after {
+  content: "Active ●";
+  color: #ffffff;
+}
+
+/* Completed Step */
+.step[data-status="completed"], .step--completed {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-healthy) 12%, var(--color-surface));
+  border-color: var(--color-healthy);
+}
+.step[data-status="completed"]::before, .step--completed::before {
+  content: "\2713";
+  color: #ffffff;
+  background: var(--color-healthy);
+  border-color: var(--color-healthy);
+}
+.step[data-status="completed"]::after, .step--completed::after {
+  content: "Done";
+  color: var(--color-healthy);
+}
+
+/* Step Panel: Central Dispatch Station */
+#step-panel {
+  padding: var(--space-4);
+  border-left: 4px solid var(--color-primary);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  border-top: 1.5px solid var(--color-border);
+  border-right: 1.5px solid var(--color-border);
+  border-bottom: 1.5px solid var(--color-border);
+}
+#step-title {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+#step-title:empty { display: none; }
+#step-instructions {
+  color: var(--color-text);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin-bottom: var(--space-4);
+}
+#step-instructions:empty { display: none; }
+
+/* Primary Continue / Next Action Container */
+#step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+#step-actions:empty { display: none; }
+
+#step-actions .btn--primary {
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---- 10. Modals (<dialog>) ---------------------------------------------- */
+.modal {
+  width: calc(100% - 2 * var(--space-4));
+  max-width: 580px;
+  max-height: calc(100vh - 2 * var(--space-4));
+  max-height: calc(100dvh - 2 * var(--space-4));
+  overflow-y: auto;
+  margin: auto;
+  padding: var(--space-6);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), var(--shadow);
+}
+.modal::backdrop {
+  background: rgba(10, 15, 24, 0.7);
+  backdrop-filter: blur(3px);
+}
+.modal[open] { animation: modal-in 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal h2 { font-size: 1.25rem; }
+#modal-complete h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+#modal-complete h2::before {
+  content: "\2713";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  font-size: 1.125rem;
+  color: #ffffff;
+  background: var(--color-healthy);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(11, 128, 84, 0.35);
+}
+
+.modal dl {
+  display: grid;
+  margin: var(--space-4) 0;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 0;
+}
+.modal dt {
+  padding: var(--space-2) 0;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.modal dd {
+  padding: var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: right;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+#confirm-message { font-size: 1rem; margin: 0; }
+
+/* ---- 11. Toasts --------------------------------------------------------- */
+.toast {
+  display: block;
+  max-width: 440px;
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-left: 5px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: toast-in 0.25s ease-out;
+}
+.toast--success { border-left-color: var(--color-healthy); }
+.toast--warn { border-left-color: var(--color-degraded); }
+.toast--danger { border-left-color: var(--color-unavailable); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+#notifications:empty { display: none; }
+#notifications {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---- 12. Footer --------------------------------------------------------- */
+.lab-footer { padding-top: 0; margin-top: var(--space-4); }
+.lab-footer p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* ---- 13. Responsive Adaptations ----------------------------------------- */
+@media (max-width: 680px) {
+  .container { padding: var(--space-4) var(--space-3); }
+  #lab-header { padding: var(--space-2) var(--space-3); }
+  #lab-header h1 { font-size: 1rem; }
+  .header-actions { width: 100%; justify-content: flex-start; }
+  .header-actions .btn { flex: 1 1 auto; min-width: 0; padding: 0 var(--space-2); font-size: 0.75rem; }
+  .section { padding: var(--space-4); }
+  .guidelines { padding: var(--space-4); }
+  .modal { padding: var(--space-4); }
+  .modal-actions .btn, .guidelines-actions .btn { flex: 1 1 100%; }
+  .toast { max-width: none; }
+}
+
+@media (max-width: 380px) {
+  .step::after { font-size: 0.5625rem; }
+  .header-actions .btn { font-size: 0.6875rem; }
+}
+
+/* ---- 14. Reduced Motion Support ----------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Sections fade up smoothly when unlocked */
+@keyframes section-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+main.container > .section:not([hidden]) { animation: section-in 0.3s ease-out both; }

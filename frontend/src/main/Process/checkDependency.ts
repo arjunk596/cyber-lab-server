@@ -10,7 +10,7 @@ function runCheck(cmd: string, args: string[], timeoutMs = 10000): Promise<boole
         resolve(val)
       }
     }
-    const child = spawn(cmd, args, { windowsHide: true })
+    const child = spawn(cmd, args, { windowsHide: true, env: process.env })
     const timer = setTimeout(() => {
       child.kill()
       done(false)

@@ -1,0 +1,323 @@
+.packet-lab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+
+  /* Module Tabs */
+  .packet-module-tabs {
+    display: flex;
+    gap: 10px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card, 14px);
+    padding: 8px;
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+
+    .pkt-tab {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: var(--color-surface-3);
+        color: var(--color-on-surface);
+      }
+
+      &.active {
+        background: var(--color-orange-gradient);
+        border-color: var(--color-orange);
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(255, 107, 0, 0.35);
+      }
+    }
+  }
+
+  /* Universal Packet Card */
+  .packet-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card, 14px);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .card-top-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--color-border);
+
+      .header-icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: var(--color-primary-fixed-dim);
+        border: 1px solid rgba(37, 99, 235, 0.2);
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        &.orange-box {
+          background: var(--color-orange-dim);
+          border-color: var(--color-orange-border);
+          color: var(--color-orange);
+        }
+      }
+
+      h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-on-surface);
+        margin: 0;
+        letter-spacing: -0.2px;
+      }
+
+      .card-subtitle {
+        font-size: 12px;
+        color: var(--color-muted);
+        display: block;
+        margin-top: 2px;
+      }
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .pkt-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &.btn-primary {
+          background: var(--color-orange-gradient);
+          border: 1px solid var(--color-orange);
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+
+          &:hover {
+            background: var(--color-orange-hover);
+            box-shadow: 0 4px 12px rgba(255, 107, 0, 0.45);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.btn-secondary {
+          background: var(--color-surface-2);
+          border: 1px solid var(--color-border);
+          color: var(--color-on-surface);
+
+          &:hover {
+            background: var(--color-surface-3);
+            border-color: var(--color-border-strong);
+          }
+        }
+
+        &.btn-danger {
+          background: var(--color-orange-dim);
+          border: 1px solid var(--color-orange-border);
+          color: var(--color-orange);
+
+          &:hover {
+            background: var(--color-orange);
+            color: #ffffff;
+          }
+        }
+      }
+    }
+
+    /* Packet Capture Table */
+    .packets-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      overflow: hidden;
+
+      th, td {
+        padding: 9px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      th {
+        background: var(--color-surface-2);
+        color: var(--color-muted);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      tr.pkt-row {
+        cursor: pointer;
+        background: var(--color-surface);
+        transition: background 0.15s ease;
+
+        &:hover {
+          background: var(--color-surface-2);
+        }
+
+        &.selected {
+          background: var(--color-primary-fixed-dim);
+          color: var(--color-primary);
+        }
+      }
+
+      .proto-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+        text-transform: uppercase;
+
+        &.http {
+          background: var(--color-orange-dim);
+          color: var(--color-orange);
+          border: 1px solid var(--color-orange-border);
+        }
+        &.tls {
+          background: rgba(16, 185, 129, 0.1);
+          color: #10b981;
+          border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        &.arp {
+          background: rgba(239, 68, 68, 0.1);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        &.dns {
+          background: var(--color-primary-fixed-dim);
+          color: var(--color-primary);
+          border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+      }
+    }
+
+    /* Frame Dissection Tree */
+    .dissect-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .tree-node {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+
+        strong {
+          color: var(--color-primary);
+          display: block;
+          margin-bottom: 6px;
+        }
+
+        .tree-fields {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 6px;
+          color: var(--color-on-surface);
+        }
+      }
+    }
+
+    /* Hex / Payload Raw Dump */
+    .payload-hex-box {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    /* ARP Simulation Device Boxes */
+    .arp-topology {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+
+      .arp-device-box {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .dev-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 700;
+          font-size: 13px;
+          color: var(--color-on-surface);
+        }
+
+        .dev-mac {
+          font-family: var(--font-mono);
+          font-size: 12px;
+          color: var(--color-muted);
+        }
+
+        .dev-arp-cache {
+          margin-top: 8px;
+          border-top: 1px solid var(--color-border);
+          padding-top: 8px;
+          font-family: var(--font-mono);
+          font-size: 11.5px;
+
+          .cache-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+
+            &.poisoned {
+              color: var(--color-orange);
+              font-weight: 700;
+            }
+          }
+        }
+      }
+    }
+  }
+}

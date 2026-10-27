@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>SYN Flood Virtual Lab</title>
+  <script>
+    (function () {
+      try {
+        var s = localStorage.getItem('synlab-theme');
+        var d = s ? s === 'dark' : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+      } catch (e) {}
+    })();
+  </script>
+  <!-- build.js replaces these links with one link to style.css -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/workshop.css">
+</head>
+<body>
+
+<!-- OWNER: Manvith (skeleton), Yash (styling) -->
+<header id="lab-header" class="container">
+  <h1>SYN Flood Virtual Lab</h1>
+  <div class="header-actions">
+    <button type="button" id="btn-theory" class="btn btn--ghost">Theory</button>
+    <button type="button" id="btn-terminal" class="btn btn--ghost" hidden aria-expanded="false" aria-controls="terminal-drawer">Terminal</button>
+    <button type="button" id="btn-theme-toggle" class="btn btn--ghost theme-toggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+      <span class="theme-toggle__icon" aria-hidden="true">◐</span>
+      <span class="theme-toggle__label">Theme</span>
+    </button>
+    <button type="button" id="btn-stop" class="btn btn--danger">Stop</button>
+    <button type="button" id="btn-reset" class="btn btn--ghost">Reset</button>
+    <button type="button" id="btn-restart" class="btn btn--ghost">Restart Lab</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- OWNER: Manvith (skeleton), Meet (text), Yash (styling) -->
+  <section id="screen-guidelines" class="section guidelines" aria-labelledby="guidelines-heading">
+    <div class="hero">
+      <p class="hero__eyebrow">Interactive networking lab</p>
+      <p class="hero__title">See how a SYN flood takes a server offline, and how defences bring it back.</p>
+      <ul class="hero__facts">
+        <li><strong>8</strong> guided steps</li>
+        <li><strong>~15 min</strong> to complete</li>
+        <li><strong>100%</strong> simulated, nothing leaves your browser</li>
+      </ul>
+    </div>
+    <h2 id="guidelines-heading" tabindex="-1">Before You Begin</h2>
+    <p id="lab-objective"></p>
+    <p id="lab-disclaimer" class="disclaimer"></p>
+    <ol id="guidelines-list"></ol>
+    <label class="checkbox" for="ack-checkbox">
+      <input type="checkbox" id="ack-checkbox">
+      I have read and understood the guidelines
+    </label>
+    <div class="guidelines-actions">
+      <button type="button" id="btn-start" class="btn btn--primary" disabled>Start Experiment</button>
+      <button type="button" id="btn-view-theory" class="btn btn--ghost">View Theory</button>
+    </div>
+  </section>
+
+  <!-- OWNER: Meet (text), Pranav (handshake demo), Yash (styling) -->
+  <section id="section-theory" hidden class="section theory" aria-labelledby="theory-heading">
+    <h2 id="theory-heading" tabindex="-1">Theory</h2>
+    <div id="theory-content"></div>
+    <div id="handshake-demo" aria-label="TCP three-way handshake demonstration"></div>
+    <div id="handshake-controls" class="handshake-controls">
+      <button type="button" id="btn-handshake-play" class="btn btn--ghost btn--sm" aria-label="Play handshake animation">&#x25B6; Play</button>
+      <button type="button" id="btn-handshake-pause" class="btn btn--ghost btn--sm" aria-label="Pause handshake animation">&#x23F8; Pause</button>
+      <button type="button" id="btn-play-handshake" class="btn btn--ghost btn--sm" aria-label="Replay handshake animation">&#x21BA; Replay handshake</button>
+    </div>
+  </section>  <!-- Two-column Lab Workspace: Left rail (Steps & Log), Right rail (Lab stations) -->
+  <div class="lab-workspace">
+    <div class="lab-sidebar">
+      <!-- OWNER: Manvith (workflow), Yash (styling) -->
+      <section id="stepper-section" hidden class="section" aria-labelledby="stepper-heading">
+        <h2 id="stepper-heading">Experiment Steps</h2>
+        <div id="stepper" class="stepper">
+          <ol id="step-list">
+            <li class="step step--locked" data-step="1" data-status="locked">Step 1</li>
+            <li class="step step--locked" data-step="2" data-status="locked">Step 2</li>
+            <li class="step step--locked" data-step="3" data-status="locked">Step 3</li>
+            <li class="step step--locked" data-step="4" data-status="locked">Step 4</li>
+            <li class="step step--locked" data-step="5" data-status="locked">Step 5</li>
+            <li class="step step--locked" data-step="6" data-status="locked">Step 6</li>
+            <li class="step step--locked" data-step="7" data-status="locked">Step 7</li>
+            <li class="step step--locked" data-step="8" data-status="locked">Step 8</li>
+            <li class="step step--locked" data-step="9" data-status="locked">Step 9</li>
+          </ol>
+        </div>
+        <div id="step-panel" class="card">
+          <h3 id="step-title" tabindex="-1"></h3>
+          <p id="step-instructions"></p>
+          <div id="step-actions"></div>
+        </div>
+      </section>
+
+      <!-- OWNER: Pranav (rendering), Sanika (styling) -->
+      <section id="log" hidden class="section" aria-labelledby="log-heading">
+        <h2 id="log-heading">Experiment Log</h2>
+        <ul id="log-list"></ul>
+      </section>
+    </div>
+
+    <!-- Lab Stations Rail -->
+    <div class="lab-main">
+      <!-- OWNER: Pranav (rendering), Sanika (styling) -->
+      <section id="topology" hidden class="section topology" aria-labelledby="topology-heading">
+        <h2 id="topology-heading">Network Topology</h2>
+        <div class="topology-scroll">
+          <svg id="topology-svg" viewBox="0 0 800 360" role="img" aria-label="Network topology diagram"></svg>
+        </div>
+        <div id="component-info" class="component-info" aria-live="polite"></div>
+      </section>
+
+      <!-- OWNER: Manvith (wiring), Yash (styling) -->
+      <section id="controls" hidden class="section" aria-labelledby="controls-heading">
+        <h2 id="controls-heading">Simulation Controls</h2>
+        <div class="controls-row">
+          <button type="button" id="btn-baseline" class="btn btn--primary">Generate Baseline Traffic</button>
+          <label for="attack-level">Attack level</label>
+          <select id="attack-level" class="field">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+          <button type="button" id="btn-start-flood" class="btn btn--danger">Start SYN Flood</button>
+          <button type="button" id="btn-stop-sim" class="btn btn--ghost">Stop Simulation</button>
+        </div>
+        <div id="run-status" class="run-status">
+          <span id="run-status-label" class="run-status__label">No simulation running</span>
+          <div class="progress run-status__progress"><div class="progress__bar"></div></div>
+        </div>
+      </section>
+
+      <!-- OWNER: Pranav (rendering), Sanika (styling) -->
+      <section id="dashboard" hidden class="section" aria-labelledby="dashboard-heading">
+        <h2 id="dashboard-heading">Live Dashboard <span class="sim-badge">Simulated data</span></h2>
+        <div id="server-state" class="server-badge server-badge--healthy">Healthy</div>
+        <div id="notifications" aria-live="polite"></div>
+        <div class="metrics-grid">
+          <div class="metric card" data-metric="syn-incoming">
+            <span class="metric__label">Incoming SYN/s</span>
+            <span class="metric__value">0</span>
+          </div>
+          <div class="metric card" data-metric="pending">
+            <span class="metric__label">Pending (half-open)</span>
+            <span class="metric__value">0</span>
+          </div>
+          <div class="metric card" data-metric="completed">
+            <span class="metric__label">Completed legitimate connections</span>
+            <span class="metric__value">0</span>
+          </div>
+          <div class="metric card" data-metric="rejected">
+            <span class="metric__label">Rejected or timed-out</span>
+            <span class="metric__value">0</span>
+          </div>
+          <div class="metric card" data-metric="queue-util">
+            <span class="metric__label">Queue utilisation</span>
+            <span class="metric__value">0%</span>
+            <div class="progress"><div class="progress__bar"></div></div>
+          </div>
+          <div class="metric card" data-metric="cpu">
+            <span class="metric__label">Server resource usage (CPU)</span>
+            <span class="metric__value">0%</span>
+            <div class="progress"><div class="progress__bar"></div></div>
+          </div>
+          <div class="metric card" data-metric="response-time">
+            <span class="metric__label">Avg response time (ms)</span>
+            <span class="metric__value">40</span>
+          </div>
+          <div class="metric card" data-metric="availability">
+            <span class="metric__label">Service availability</span>
+            <span class="metric__value">100%</span>
+            <div class="progress"><div class="progress__bar"></div></div>
+          </div>
+        </div>
+        <div class="chart">
+          <canvas id="chart-history" width="800" height="240" role="img" aria-label="History chart of availability and queue utilisation (simulated data)"></canvas>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Full-width Lab Stages: Mitigation & Comparison -->
+  <!-- OWNER: Manvith (wiring), Meet (text), Sanika (styling) -->
+  <section id="mitigation" hidden class="section" aria-labelledby="mitigation-heading">
+    <h2 id="mitigation-heading">Mitigation</h2>
+    <p class="mitigation-note">These switches are controlled by the terminal: your Linux configuration turns them on. <button type="button" id="btn-open-terminal-mit" class="btn btn--ghost btn--sm">Open the terminal</button></p>
+    <div class="mitigation-item">
+      <input type="checkbox" id="mit-syn-cookies" disabled>
+      <label for="mit-syn-cookies">SYN cookies</label>
+    </div>
+    <div class="mitigation-item">
+      <input type="checkbox" id="mit-rate-limit" disabled>
+      <label for="mit-rate-limit">Rate limiting</label>
+    </div>
+    <div class="mitigation-item">
+      <input type="checkbox" id="mit-short-timeout" disabled>
+      <label for="mit-short-timeout">Shorter timeouts</label>
+    </div>
+    <div class="mitigation-item">
+      <input type="checkbox" id="mit-firewall" disabled>
+      <label for="mit-firewall">Firewall filtering</label>
+    </div>
+    <button type="button" id="btn-run-mitigated" class="btn btn--primary">Run With Mitigation</button>
+  </section>
+
+  <!-- OWNER: Pranav (rendering), Sanika (styling) -->
+  <section id="comparison" hidden class="section" aria-labelledby="comparison-heading">
+    <h2 id="comparison-heading">Comparison <span class="sim-badge">Simulated data</span></h2>
+    <table id="compare-table" class="compare-table"></table>
+    <p id="compare-explanation"></p>
+  </section>
+
+  <!-- Below this section: Defender's Workshop, and Quiz -->
+
+  <!-- OWNER: Manvith (logic), Meet (text), Sanika (styling). Part 2: built by the Workshop module from Lab.Content.workshop -->
+  <section id="workshop" hidden class="section workshop" aria-labelledby="workshop-heading">
+    <p class="workshop__eyebrow">Part 2</p>
+    <h2 id="workshop-heading" tabindex="-1">Defender's Workshop</h2>
+    <div id="workshop-content"></div>
+  </section>
+
+  <!-- OWNER: Manvith (logic), Meet (questions), Sanika (styling) -->
+  <section id="quiz" hidden class="section" aria-labelledby="quiz-heading">
+    <h2 id="quiz-heading">Quiz</h2>
+    <div id="quiz-container"></div>
+    <p id="quiz-score" aria-live="polite"></p>
+  </section>
+
+</main>
+
+<footer class="container lab-footer">
+  <p id="lab-footer-note"></p>
+</footer>
+
+<!-- OWNER: Manvith (logic), Yash (styling) -->
+<!-- Terminal pop-up: built and wired by the Terminal module -->
+<section id="terminal-drawer" class="term-drawer" hidden role="dialog" aria-modal="false" aria-label="Simulated Linux terminal">
+  <div class="term-drawer__bar">
+    <span class="term-drawer__title"><span class="term-drawer__dot" aria-hidden="true"></span>root@web01 — simulated terminal</span>
+    <span class="term-drawer__actions">
+      <button type="button" id="btn-term-max" class="term-drawer__btn" aria-label="Toggle full screen terminal">&#x26F6; Fullscreen</button>
+      <button type="button" id="btn-term-size" class="term-drawer__btn" aria-label="Make the terminal taller">&#x2195; Resize</button>
+      <button type="button" id="btn-term-clear" class="term-drawer__btn" aria-label="Clear the terminal">Clear</button>
+      <button type="button" id="btn-term-close" class="term-drawer__btn" aria-label="Close the terminal">Close &#x2715;</button>
+    </span>
+  </div>
+  <div class="term-drawer__body">
+    <aside id="term-guide" class="term-guide" aria-label="Guided runbook"></aside>
+    <div class="term-main">
+      <div id="ws-term-output" class="ws-term__out" role="log" aria-live="polite" aria-label="Terminal output" tabindex="0"></div>
+      <form id="ws-term-form" class="ws-term__form" autocomplete="off">
+        <label class="ws-term__prompt" for="ws-term-input">root@web01:~#</label>
+        <input id="ws-term-input" class="ws-term__input" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" aria-label="Type a Linux command">
+      </form>
+      <div id="term-chips" class="ws-chips"></div>
+    </div>
+  </div>
+</section>
+
+<dialog id="modal-complete" class="modal" aria-labelledby="complete-heading">
+  <h2 id="complete-heading">Experiment Completed Successfully!</h2>
+  <p id="complete-message"></p>
+  <dl>
+    <dt>Baseline availability</dt><dd id="complete-baseline"></dd>
+    <dt>Availability under attack</dt><dd id="complete-attack"></dd>
+    <dt>Availability with mitigation</dt><dd id="complete-mitigated"></dd>
+    <dt>Hardened server (workshop)</dt><dd id="complete-hardened"></dd>
+    <dt>Quiz score</dt><dd id="complete-score"></dd>
+    <dt>Status</dt><dd id="complete-status"></dd>
+  </dl>
+  <div class="modal-actions">
+    <button type="button" id="btn-review" class="btn btn--ghost">Review Results</button>
+    <button type="button" id="btn-restart-lab" class="btn btn--primary">Restart Lab</button>
+  </div>
+</dialog>
+
+<dialog id="modal-confirm" class="modal" aria-labelledby="confirm-message">
+  <p id="confirm-message"></p>
+  <div class="modal-actions">
+    <button type="button" id="btn-confirm-no" class="btn btn--ghost">Cancel</button>
+    <button type="button" id="btn-confirm-yes" class="btn btn--danger">Yes, reset</button>
+  </div>
+</dialog>
+
+<!-- build.js replaces these script tags with one <script src="script.js"> -->
+<script src="js/content.js"></script>
+<script src="js/workshop-content.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/mock-engine.js"></script>
+<script src="js/visuals.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/workshop.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/workflow.js"></script>
+</body>
+</html>

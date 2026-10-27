@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packet Sniffing & ARP Spoofing Virtual Lab | CRCE Cyber Lab</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --code-bg: #0f172a;
+      --code-text: #f1f5f9;
+      --radius: 8px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1120;
+        --panel: #1e293b;
+        --border: #334155;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --code-bg: #020617;
+        --code-text: #e2e8f0;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header h1 { font-size: 20px; font-weight: 700; color: var(--text); }
+    .header .badge {
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: var(--panel);
+      border-color: var(--border);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--bg); border-color: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: var(--mono);
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: none; }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-clear { background: #fee2e2; color: #991b1b; }
+    .badge-enc { background: #dcfce7; color: #166534; }
+    .topology {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 30px 20px;
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 140px;
+      text-align: center;
+    }
+    .node-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--panel);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      color: var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .node.attacker .node-icon { border-color: var(--danger); color: var(--danger); }
+    .node-title { font-weight: 600; font-size: 13px; }
+    .node-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .code-box {
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 14px;
+      border-radius: var(--radius);
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Packet Sniffing & ARP Spoofing Virtual Laboratory</h1>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 2px;">CRCE Cyber Lab • Network Security Series</div>
+    </div>
+    <span class="badge">Port 3002 • Container Active</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showModule(1)">Module 1: Promiscuous Sniffing</button>
+    <button class="tab-btn" onclick="showModule(2)">Module 2: Cleartext vs TLS</button>
+    <button class="tab-btn" onclick="showModule(3)">Module 3: ARP Poisoning (MITM)</button>
+  </div>
+
+  <!-- Module 1 -->
+  <div id="module1">
+    <div class="card">
+      <div class="card-title">Network Interface Sniffer Control</div>
+      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+        <button class="btn btn-primary" id="promiscBtn" onclick="togglePromiscuous()">Promiscuous Mode: OFF</button>
+        <button class="btn btn-secondary" onclick="generateSimulatedPacket()">Capture Next Packet</button>
+        <span style="font-size: 12px; color: var(--muted);">Interface: eth0 (IP: 192.168.1.100, MAC: 00:0c:29:4f:8e:1a)</span>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Source</th>
+              <th>Destination</th>
+              <th>Protocol</th>
+              <th>Length</th>
+              <th>Info</th>
+            </tr>
+          </thead>
+          <tbody id="sniffTable">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--muted); padding: 24px;">No packets captured. Enable promiscuous mode or click "Capture Next Packet".</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module 2 -->
+  <div id="module2" style="display: none;">
+    <div class="card">
+      <div class="card-title">HTTP Cleartext vs HTTPS Encrypted Payload Inspection</div>
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <button class="btn btn-danger" onclick="sendAuthTraffic(false)">Send HTTP Login Request (Port 80)</button>
+        <button class="btn btn-primary" onclick="sendAuthTraffic(true)">Send HTTPS Login Request (Port 443)</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px;">Intercepted Wire Data</div>
+          <div class="code-box" id="wirePayload">Click a button above to transmit authentication traffic across the wire...</div>
+        </div>
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px;">Security Analysis</div>
+          <div id="wireAnalysis" style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 13px;">
+            In HTTP (unencrypted), credentials are exposed in plain text to anyone on the local network segment. In HTTPS (TLS 1.3), the payload is encrypted with authenticated symmetric ciphers.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module 3 -->
+  <div id="module3" style="display: none;">
+    <div class="card">
+      <div class="card-title">ARP Cache Poisoning Simulation</div>
+
+      <div class="topology">
+        <div class="node">
+          <div class="node-icon">PC</div>
+          <div class="node-title">Victim Client</div>
+          <div class="node-meta">192.168.1.50</div>
+          <div class="node-meta">aa:bb:cc:11:22:33</div>
+        </div>
+
+        <div class="node attacker">
+          <div class="node-icon">ATK</div>
+          <div class="node-title">Attacker Node</div>
+          <div class="node-meta">192.168.1.66</div>
+          <div class="node-meta">ee:ee:ee:aa:bb:cc</div>
+        </div>
+
+        <div class="node">
+          <div class="node-icon">GW</div>
+          <div class="node-title">Default Gateway</div>
+          <div class="node-meta">192.168.1.1</div>
+          <div class="node-meta">00:11:22:33:44:55</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin: 20px 0;">
+        <button class="btn btn-danger" onclick="poisonArp()">Broadcast Spoofed ARP Reply</button>
+        <button class="btn btn-secondary" onclick="restoreArp()">Restore Legitimate ARP Cache</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px;">Victim ARP Cache (192.168.1.50)</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>IP Address</th><th>MAC Address</th><th>State</th></tr>
+              </thead>
+              <tbody id="victimArpTable">
+                <tr><td>192.168.1.1</td><td>00:11:22:33:44:55</td><td><span class="status-badge badge-enc">Legitimate</span></td></tr>
+                <tr><td>192.168.1.66</td><td>ee:ee:ee:aa:bb:cc</td><td><span class="status-badge badge-enc">Dynamic</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px;">MITM Interception Log</div>
+          <div class="code-box" id="arpLog" style="height: 120px; overflow-y: auto;">[+] ARP Monitor active on broadcast segment.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let promisc = false;
+    let packetCount = 0;
+
+    function showModule(n) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i + 1 === n));
+      document.getElementById('module1').style.display = (n === 1) ? 'block' : 'none';
+      document.getElementById('module2').style.display = (n === 2) ? 'block' : 'none';
+      document.getElementById('module3').style.display = (n === 3) ? 'block' : 'none';
+    }
+
+    function togglePromiscuous() {
+      promisc = !promisc;
+      const btn = document.getElementById('promiscBtn');
+      if (promisc) {
+        btn.textContent = "Promiscuous Mode: ON";
+        btn.className = "btn btn-danger";
+      } else {
+        btn.textContent = "Promiscuous Mode: OFF";
+        btn.className = "btn btn-primary";
+      }
+    }
+
+    function generateSimulatedPacket() {
+      const tbody = document.getElementById('sniffTable');
+      if (packetCount === 0) tbody.innerHTML = '';
+      packetCount++;
+
+      const isForMe = !promisc ? (packetCount % 2 === 0) : true;
+      if (!isForMe) return;
+
+      const protos = [
+        { proto: "TCP", src: "192.168.1.50", dst: "192.168.1.1", len: 74, info: "54231 -> 80 [SYN] Seq=0 Win=64240" },
+        { proto: "DNS", src: "192.168.1.50", dst: "8.8.8.8", len: 68, info: "Standard query 0x1a2b A cyberlab.crce.ac.in" },
+        { proto: "ARP", src: "00:11:22:33:44:55", dst: "Broadcast", len: 42, info: "Who has 192.168.1.50? Tell 192.168.1.1" },
+        { proto: "HTTP", src: "192.168.1.50", dst: "192.168.1.100", len: 320, info: "GET /admin HTTP/1.1 (CRCE Portal)" }
+      ];
+
+      const pkt = protos[Math.floor(Math.random() * protos.length)];
+      const now = new Date().toTimeString().split(' ')[0] + '.' + Math.floor(Math.random() * 900 + 100);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${now}</td>
+        <td>${pkt.src}</td>
+        <td>${pkt.dst}</td>
+        <td><strong>${pkt.proto}</strong></td>
+        <td>${pkt.len} B</td>
+        <td>${pkt.info}</td>
+      `;
+      tbody.prepend(tr);
+    }
+
+    function sendAuthTraffic(isEncrypted) {
+      const wire = document.getElementById('wirePayload');
+      const analysis = document.getElementById('wireAnalysis');
+
+      if (isEncrypted) {
+        wire.textContent = `TLSv1.3 Encrypted Record (Application Data):
+17 03 03 00 68 8e a2 c4 f1 99 21 b0 dc fa 04 2a
+77 e8 19 3b 4c dd 91 0f a3 5e 81 29 cc fa 90 12
+-- [Encrypted with ChaCha20-Poly1305 / AES-256-GCM] --
+Payload plaintext is inaccessible to unauthorized network sniffers.`;
+        analysis.innerHTML = `<span class="status-badge badge-enc" style="margin-bottom:8px;">TLS 1.3 Active</span><br>Perfect Forward Secrecy prevents passive eavesdropping. Key exchange completed via ECDHE.`;
+      } else {
+        wire.textContent = `POST /login.php HTTP/1.1
+Host: 192.168.1.100
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 39
+
+username=admin&password=SuperSecretPassword123!`;
+        analysis.innerHTML = `<span class="status-badge badge-clear" style="margin-bottom:8px;">Cleartext Leaked</span><br><strong style="color:var(--danger)">VULNERABILITY CONFIRMED:</strong> User credentials (<code>admin</code> / <code>SuperSecretPassword123!</code>) were intercepted in cleartext by the sniffer!`;
+      }
+    }
+
+    function poisonArp() {
+      const tbody = document.getElementById('victimArpTable');
+      tbody.innerHTML = `
+        <tr style="background:#fee2e2;"><td>192.168.1.1</td><td>ee:ee:ee:aa:bb:cc</td><td><span class="status-badge badge-clear">POISONED (Attacker MAC)</span></td></tr>
+        <tr><td>192.168.1.66</td><td>ee:ee:ee:aa:bb:cc</td><td><span class="status-badge badge-enc">Dynamic</span></td></tr>
+      `;
+      const log = document.getElementById('arpLog');
+      log.textContent = `[!] Sent Gratuitous ARP: 192.168.1.1 is at ee:ee:ee:aa:bb:cc\n[!] Victim ARP cache poisoned!\n[*] All outbound gateway traffic now routed through Attacker node!`;
+    }
+
+    function restoreArp() {
+      const tbody = document.getElementById('victimArpTable');
+      tbody.innerHTML = `
+        <tr><td>192.168.1.1</td><td>00:11:22:33:44:55</td><td><span class="status-badge badge-enc">Legitimate</span></td></tr>
+        <tr><td>192.168.1.66</td><td>ee:ee:ee:aa:bb:cc</td><td><span class="status-badge badge-enc">Dynamic</span></td></tr>
+      `;
+      const log = document.getElementById('arpLog');
+      log.textContent = `[+] Sent clean ARP unicast: 192.168.1.1 is at 00:11:22:33:44:55\n[+] Legitimate gateway binding restored.`;
+    }
+  </script>
+</body>
+</html>
