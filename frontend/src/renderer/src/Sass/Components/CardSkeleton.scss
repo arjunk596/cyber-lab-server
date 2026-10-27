@@ -1,0 +1,91 @@
+.exp-skeleton {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .exp-skeleton-body {
+    padding: 18px 18px 14px;
+  }
+
+  .exp-skeleton-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .exp-skeleton-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 12px 18px;
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-surface-2);
+  }
+
+  .sk {
+    display: block;
+    border-radius: 6px;
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-2) 25%,
+      var(--color-surface-3) 37%,
+      var(--color-surface-2) 63%
+    );
+    background-size: 400% 100%;
+    animation: sk-shimmer 1.4s ease infinite;
+  }
+
+  .sk-icon {
+    height: 34px;
+    width: 34px;
+    border-radius: 8px;
+  }
+
+  .sk-meta {
+    height: 12px;
+    width: 130px;
+  }
+
+  .sk-title {
+    height: 18px;
+    width: 55%;
+    margin-bottom: 10px;
+  }
+
+  .sk-line {
+    height: 12px;
+    width: 100%;
+    margin-bottom: 8px;
+
+    &.short {
+      width: 78%;
+      margin-bottom: 0;
+    }
+  }
+
+  .sk-btn {
+    height: 28px;
+    width: 92px;
+    border-radius: 7px;
+  }
+}
+
+@keyframes sk-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exp-skeleton .sk {
+    animation: none;
+  }
+}

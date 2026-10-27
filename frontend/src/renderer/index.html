@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>CRCE Cyber Lab</title>
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https://*.githubusercontent.com;
+    connect-src 'self' https://raw.githubusercontent.com https://*.githubusercontent.com https://*.ngrok-free.dev http://localhost:3000 http://localhost:*;
+  " />
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

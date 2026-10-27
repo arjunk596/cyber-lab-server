@@ -1,0 +1,50 @@
+.getting-started {
+    height: calc(100dvh - 49px - 48px - 44px - 30px - 2px);
+    padding: 20px;
+    margin-top: 30px;
+    background-color: var(--color-surface);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+
+    .cp-img {
+        width: 60%;
+        height: 60%;
+        display: flex;
+
+        img {
+            display: block;
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .cp-text {
+        width: 100%;
+
+        *:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: var(--color-faint);
+            text-align: justify;
+        }
+
+        button {
+            padding: 5px 25px;
+            font-size: 16px;
+            border: 0;
+            background-color: var(--color-primary);
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-primary-hover);
+            }
+        }
+    }
+
+}

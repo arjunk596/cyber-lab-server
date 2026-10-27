@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+:root {
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+    --color-background: #0b1220;
+    --color-surface: #111a30;
+    --color-surface-2: #16213c;
+    --color-surface-3: #1c2949;
+    --color-border: #243353;
+    --color-border-strong: #31436b;
+
+    --color-on-surface: #e8eef9;
+    --color-muted: #8b9bb8;
+    --color-faint: #5a6b8c;
+
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-primary-active: #1d4ed8;
+    --color-primary-fixed-dim: rgba(59, 130, 246, 0.16);
+    --color-on-primary: #ffffff;
+
+    --color-accent: #22d3ee;
+    --color-accent-dim: rgba(34, 211, 238, 0.14);
+
+    --color-success: #22c55e;
+    --color-success-dim: rgba(34, 197, 94, 0.14);
+    --color-warning: #f59e0b;
+    --color-warning-dim: rgba(245, 158, 11, 0.14);
+    --color-danger: #ef4444;
+    --color-danger-dim: rgba(239, 68, 68, 0.14);
+    --color-info: #38bdf8;
+    --color-info-dim: rgba(56, 189, 248, 0.14);
+
+    --severity-critical: #ef4444;
+    --severity-high: #f97316;
+    --severity-medium: #f59e0b;
+    --severity-low: #3b82f6;
+    --severity-info: #22d3ee;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    font-family: var(--font-sans);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 15px;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+#loading {
+    border-radius: 50%;
+    border: 2px solid var(--color-primary-fixed-dim);
+    border-top: 2px solid var(--color-primary);
+    animation: rotate 2s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    from {
+        rotate: 0deg;
+    }
+
+    to {
+        rotate: 360deg;
+    }
+}

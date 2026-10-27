@@ -1,0 +1,13 @@
+{
+  "name": "cyber-lab-monorepo",
+  "version": "1.0.0",
+  "description": "CRCE Cyber Lab - Fullstack Cyber Range & Catalog Server",
+  "scripts": {
+    "server": "python3 backend/server.py",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "install:frontend": "npm --prefix frontend install"
+  },
+  "author": "CRCE",
+  "license": "MIT"
+}

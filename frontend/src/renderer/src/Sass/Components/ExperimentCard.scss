@@ -1,0 +1,130 @@
+.exp-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+  }
+
+  .exp-card-body {
+    padding: 18px 18px 14px;
+  }
+
+  .exp-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .exp-card-icon {
+    height: 34px;
+    width: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &.accent-violet {
+      background: rgba(139, 92, 246, 0.16);
+      color: #a78bfa;
+    }
+
+    &.accent-amber {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fbbf24;
+    }
+
+    &.accent-rose {
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+    }
+
+    &.accent-fuchsia {
+      background: rgba(217, 70, 239, 0.16);
+      color: #e879f9;
+    }
+
+    &.accent-sky {
+      background: rgba(56, 189, 248, 0.16);
+      color: #38bdf8;
+    }
+
+    &.accent-indigo {
+      background: rgba(99, 102, 241, 0.18);
+      color: #a5b4fc;
+    }
+  }
+
+  .exp-card-meta {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .exp-card-title {
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 650;
+    color: var(--color-on-surface);
+    margin-bottom: 6px;
+  }
+
+  .exp-card-desc {
+    font-size: 13.5px;
+    line-height: 20px;
+    color: var(--color-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 60px;
+  }
+
+  .exp-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-surface-2);
+  }
+
+  .exp-card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-on-primary);
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    &:active {
+      background-color: var(--color-primary-active);
+    }
+  }
+}

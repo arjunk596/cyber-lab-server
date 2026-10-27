@@ -1,3 +1,24 @@
+# Dependencies
+node_modules/
+package-lock.json.bak
+
+# Build outputs
+dist/
+out/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.venv/
+env/
+
+# Environment & credentials
+.env
+.env.local
+
+# OS / IDE
 .DS_Store
+Thumbs.db
+.eslintcache
+*.log*
