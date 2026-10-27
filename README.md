@@ -70,6 +70,7 @@ The database currently includes:
 * **Virtual Network Security Lab: DoS & DDoS Attacks and Mitigation** (`Network`)
 * **Buffer Overflow Attack: Stack Smashing & Control Flow Hijacking** (`System`)
 * **TCP SYN Flood Attack & Defense Simulation** (`Network`)
+* **Packet Sniffing, ARP Spoofing & Protocol Analysis** (`Network`)
 
 ---
 
